@@ -1,0 +1,47 @@
+<ion-view view-title="Tareas">
+    <ion-content ng-class="{expanded:isExpanded}">
+        <div class="content" style="padding-top:20px;">
+
+            <div ng-if="listaTareas && listaTareas.length>0" style="padding-left:15px; padding-right:10px;"> 
+                <span>Nombre de la tarea</span> 
+                <span class="pull-right">Estado</span> 
+            </div>
+
+            <div class="list animate-fade-slide-in-right">
+                
+                <a href="#/parent/tareas/001" class="item item-icon-right">
+                    <h2> Investigación sobre célula vegetal </h2>
+                    <p> Ciencias Naturales </p>
+                    <i class="icon ion-alert-circled" style="color:orange"></i>
+                </a>
+                <a href="#/parent/tareas/002" class="item item-icon-right">
+                    <h2> Escribir ensayo sobre el 24 de Julio </h2>
+                    <p> Lenguaje y comunicación </p>
+                    <i class="icon ion-checkmark-circled" style="color:green"></i>
+                </a>
+                <a href="#/parent/tareas/003" class="item item-icon-right">
+                    <h2> Miscelánea de ejercicios </h2>
+                    <p> Matemáticas </p>
+                    <i class="icon ion-close-circled" style="color:red"></i>
+                </a>
+                <a href="#/parent/tareas/004" class="item item-icon-right">
+                    <h2> Investigación sobre mitosis </h2>
+                    <p> Ciencias Naturales </p>
+                    <i class="icon ion-checkmark-circled" style="color:green"></i>
+                </a>
+                <a href="#/parent/tareas/005" class="item item-icon-right">
+                    <h2> Ejercicios página 50 </h2>
+                    <p> Matemáticas </p>
+                    <i class="icon ion-checkmark-circled" style="color:green"></i>
+                </a>
+                <a href="#/parent/tareas/006" class="item item-icon-right">
+                    <h2> Llevar diccionario </h2>
+                    <p> Lenguaje y comunicación </p>
+                    <i class="icon ion-checkmark-circled" style="color:green"></i>
+                </a>
+
+            </div>
+
+        </div>
+    </ion-content>
+</ion-view>

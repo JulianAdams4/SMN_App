@@ -1,0 +1,20 @@
+<ion-view view-title="Calificaciones">
+    <ion-content ng-class="{expanded:isExpanded}">
+        <div class="content" style="padding:10px;">
+
+			<div class="list">
+		  		<div class="item item-divider">
+			        <div class="row header" style="margin-left:0px;">
+			          	<div class="text-center"> Listado de materias </div>
+			        </div>
+		  		</div>
+
+				<a class="item" ng-repeat="data in calificaciones" href="#/parent/calificaciones/{{data.id}}" style="padding-left:40px">
+			        <p> {{data.materia}} </p>
+					<small> Toque para ver más detalles </small>
+				</a>
+			</div>
+
+        </div>
+    </ion-content>
+</ion-view>
