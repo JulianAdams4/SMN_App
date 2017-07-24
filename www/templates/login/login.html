@@ -1,7 +1,7 @@
 <ion-view view-title="Login" align-title="left" ng-init="init()">
-    <ion-content style="background: url('img/fondoFrutas.jpg') center; background-size: cover;" scroll="false">
+    <ion-content>
         <!-- Logo -->        
-        <div class="hero no-header flat">
+        <div id="content-login" class="hero no-header flat">
             <div class="content">
                 <div class="app-icon"></div>
                 <!-- <h3 style="color:#000;text-shadow: 0 1px 0px #fff;">SMN</h3> -->
@@ -9,21 +9,21 @@
         </div>
         
         <!-- Formulario -->
-        <div class="list" style="padding-left:60px; padding-right:60px; position:relative; top:-30px;">
+        <div class="list" style="padding-left:60px; padding-right:60px; position:relative; top:-40px;">
             <label class="item item-input item-floating-label">
-                <span class="input-label">Usuario: </span>
+                <span style="color: #EB5E28;" class="input-label">Usuario: </span>
                 <input type="text" placeholder="Usuario" ng-model="loginData.loginUser">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Contraseña: </span>
+                <span style="color: #EB5E28;" class="input-label">Contraseña: </span>
                 <input type="password" placeholder="Contraseña" ng-model="loginData.loginPassword">
             </label>
         </div>
         
         <!-- Submit -->
-        <div style="padding-left:60px; padding-right:60px; position:relative; top:-30px;">
+        <div style="padding-left:60px; padding-right:60px; position:relative; top:-10px;">
             <button ng-click="login()"
-                    class="button button-full button-positive ink">
+                    class="button button-full ink" style="background-color: #EB5E28!important; color: #fff;">
                     Ingresar
             </button>
         </div>

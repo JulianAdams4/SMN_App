@@ -62,15 +62,28 @@ p {
 
 /* Login
 ==================================*/
+#content-login {
+    background: url('../img/fondoFrutas.jpg') no-repeat;
+    width: 100%;
+}
+
+/*
+#logindown {
+    background: url('../img/fondoFrutas2.jpg')  no-repeat center center fixed;
+    width: 100%;
+    height: 20%;
+}
+*/
+
 .app-icon {
     background-color: #fff;
     /*background: url('../img/crown.jpg') center;*/
     background: url('../img/logoSMN.jpg') center;
     background-size: cover;
     border-radius: 50%;
-    height: 160px;
+    height: 180px;
     margin: 0 auto;
-    width: 160px;
+    width: 180px;
 }
 
 .social-login {

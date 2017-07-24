@@ -1,6 +1,6 @@
 {
-  "name": "myApp",
-  "app_id": "b8106d0f",
+  "name": "SMN",
+  "app_id": "77cb8453",
   "type": "ionic1",
   "watchPatterns": [
     "scss/**/*"
