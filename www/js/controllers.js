@@ -1,7 +1,15 @@
 /* global angular, document, window */
 'use strict';
 
+// APIEndPoint.url
+
 angular.module('starter.controllers', ['ionic-datepicker'])
+
+.constant('API', {
+//  url: 'http://apismn.herokuapp.com/api'
+  url: 'http://localhost:3000/api'
+})
+
 .config(function (ionicDatePickerProvider) {
     var datePickerObj = {
       inputDate: new Date(),
@@ -21,12 +29,12 @@ angular.module('starter.controllers', ['ionic-datepicker'])
       disableWeekdays: []
     };
     ionicDatePickerProvider.configDatePicker(datePickerObj);
-  })
+})
 
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, 
-                                $timeout, $window, $ionicHistory,
-                                $state) {
+.controller('AppCtrl', function(
+    $scope, $ionicModal, $ionicPopover, $timeout, $window, $ionicHistory,
+    $state, $ionicLoading, LoginService) {
 
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
@@ -108,27 +116,24 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         }
     };
 
+    // Usado por el menú desplegable lateral
     $scope.cerrarSesion = function () {
-        $window.localStorage.clear();
-        $window.sessionStorage.clear();
-        $ionicHistory.clearCache();
-        $ionicHistory.clearHistory();
-        // **********
-        $ionicHistory.nextViewOptions({
-            disableAnimate: false,
-            disableBack: true
+        $ionicLoading.show({
+            template: '<ion-spinner icon="circles"></ion-spinner> <h5>Cerrando sesión</h5>',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 500,
+            showDelay: 0
         });
-        // **********
-        $scope.hideNavBar();
-        $scope.noHeader();
-        $window.location.href = '#/app/login';
-        //$state.go('app.login',{}, {reload: true});
+        // Send true for hide animation
+        LoginService.logOut(500);
     }
+
 })
 
 
-.controller('InitLoginCtrl', function($scope, $window, $ionicHistory,
-                                      $state) {
+.controller('InitLoginCtrl', function(
+    $scope, $window, $ionicHistory, $state) {
 
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
@@ -140,28 +145,13 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             this.classList.toggle('active');
         });
     }
-
-    $scope.cerrarSesion = function () {
-        $window.localStorage.clear();
-        $window.sessionStorage.clear();
-        $ionicHistory.clearCache();
-        $ionicHistory.clearHistory();
-        // **********
-        $ionicHistory.nextViewOptions({
-            disableAnimate: false,
-            disableBack: true
-        });
-        // **********
-        $window.location.href = '#/app/login';
-        //$state.go('app.login',{}, {reload: true});
-    }
 })
 
 
-.controller('LoginCtrl', function($scope, $timeout, $stateParams, 
-                                  ionicMaterialInk, $ionicModal, $ionicLoading, 
-                                  $ionicHistory, $state, $ionicPopup, 
-                                  $window) {
+.controller('LoginCtrl', function(
+    $scope, $timeout, $stateParams, ionicMaterialInk, $ionicModal, $ionicLoading, 
+    $ionicHistory, $state, $ionicPopup, $window, $rootScope, 
+    NotifyService, LoginService) {
 
     $scope.init = function () {
         if ( $scope.isSessionActive() ) {
@@ -201,120 +191,71 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         $scope.errorModal.show();
     };
 
-    $scope.isSessionActive = function () {
-        return $window.localStorage.id ? true : false;
-    }
-
-    $scope.setToken = function (tokens) {
-        for (var key in tokens){
-            $window.localStorage.setItem(key , encodeURIComponent(tokens[key]) );
-        }
-    }
-
     $scope.login = function () {
-
         // Campos vacios
         if( $scope.loginData.loginUser=="" || $scope.loginData.loginPassword=="" ){
-            //$rootScope.notify('<h4>¡Ingrese credenciales válidas!</h4>');
-            alert('Ingrese credenciales válidas');
+            NotifyService.notify('<h5>¡Ingrese credenciales válidas!</h5>');
+            //alert('Ingrese credenciales válidas');
             return false;
         }
         else {
             // Animation
             $ionicLoading.show({
-                template: '<ion-spinner icon="circles" class="spinner-calm"></ion-spinner><h4>Autenticando</h4>',
+                template: '<ion-spinner icon="circles"></ion-spinner> <h5>Autenticando</h5>',
                 animation: 'fade-in',
                 showBackdrop: true,
                 maxWidth: 500,
                 showDelay: 0
             });
-
             /*/////////////////////////////////////// 
                 Validacion de credenciales y roles
             ///////////////////////////////////////*/
-            if ( $scope.loginData.loginUser=="1" && $scope.loginData.loginPassword=="1" ) {
-                $scope.rolLogin = "child";
-                $scope.idUser = "001";
+            var user = $scope.loginData.loginUser;
+            var pass = $scope.loginData.loginPassword;
 
+            LoginService.loginUser( user, pass )
+            .success(function (data) {
+                console.log(data);
                 var ls = {
-                    rol: $scope.rolLogin, 
-                    id: $scope.idUser
+                    sessionActive: true
                 };
-
-                // Se crea la session
-                $scope.setToken(ls);
-
-                $ionicLoading.hide();
-                $scope.loginData.loginPassword="";
-                
-                /* ********** */
+                $rootScope.setToken(ls); // Se crea la "session"
+                // No back button
                 $ionicHistory.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
+                  disableAnimate: true,
+                  disableBack: true
                 });
-                /* ********* */
+                $ionicLoading.hide();
                 $state.go('child.profile',{}, {reload: true});
-            }
-            else if ( $scope.loginData.loginUser=="2" && $scope.loginData.loginPassword=="2" ) {
-                $scope.rolLogin = "teacher";
-                $scope.idUser = "002";
 
-                var ls = {
-                    rol: $scope.rolLogin, 
-                    id: $scope.idUser
-                };
-
-                // Se crea la session
-                $scope.setToken(ls);
-
+            })
+            .error(function (data) {
+                console.log(data);
                 $ionicLoading.hide();
-                $scope.loginData.loginPassword="";
-                
-                /* ********** */
-                $ionicHistory.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
-                });
-                /* ********* */
-                $state.go('teacher.profile',{}, {reload: true});
-            }
-            else if ( $scope.loginData.loginUser=="3" && $scope.loginData.loginPassword=="3" ) {
-                $scope.rolLogin = "parent";
-                $scope.idUser = "003";
-
-                var ls = {
-                    rol: $scope.rolLogin, 
-                    id: $scope.idUser
-                };
-
-                // Se crea la session
-                $scope.setToken(ls);
-
-                $ionicLoading.hide();
-                $scope.loginData.loginPassword="";
-                
-                /* ********** */
-                $ionicHistory.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
-                });
-                /* ********* */
-                $state.go('parent.profile',{}, {reload: true});
-            }
-            else {
-                $ionicLoading.hide();
-                $scope.mostrarModalError();
-                $scope.loginData.loginPassword="";
-            }
-
-        }
+                NotifyService.notify('<h5>¡Usuario o contraseña incorrectos!<br>Por favor verifique las credenciales</h5>',3000);
+                $scope.loginData.loginPassword = "";
+            });
+        } // else empty
 
     } // end login
 
+    $scope.cerrarSesion = function () {
+        $ionicLoading.show({
+            template: '<ion-spinner icon="circles"></ion-spinner> <h5>Cerrando sesión</h5>',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 500,
+            showDelay: 0
+        });
+        // Send true for hide animation
+        LoginService.logOut(500);
+    }
+
 })
 
-.controller('TareasCtrl', function($scope, $stateParams, $timeout, 
-                                    ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate) {
+.controller('TareasCtrl', function(
+    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate) {
+
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
