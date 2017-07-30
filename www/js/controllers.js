@@ -116,16 +116,21 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         }
     };
 
-    // Usado por el menú desplegable lateral
+
+
+    /*//////////////////////////////////////////
+        Usado por el menú desplegable lateral
+    //////////////////////////////////////////*/
+
     $scope.cerrarSesion = function () {
         $ionicLoading.show({
-            template: '<ion-spinner icon="circles"></ion-spinner> <h5>Cerrando sesión</h5>',
+            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cerrando sesión</h4>',
             animation: 'fade-in',
             showBackdrop: true,
             maxWidth: 500,
             showDelay: 0
         });
-        // Send true for hide animation
+        // Send time to hide animation
         LoginService.logOut(500);
     }
 
@@ -194,14 +199,14 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     $scope.login = function () {
         // Campos vacios
         if( $scope.loginData.loginUser=="" || $scope.loginData.loginPassword=="" ){
-            NotifyService.notify('<h5>¡Ingrese credenciales válidas!</h5>');
+            NotifyService.notify('<h4>¡Ingrese credenciales válidas!</h4>');
             //alert('Ingrese credenciales válidas');
-            return false;
+            //return false;
         }
         else {
             // Animation
             $ionicLoading.show({
-                template: '<ion-spinner icon="circles"></ion-spinner> <h5>Autenticando</h5>',
+                template: '<ion-spinner icon="circles"></ion-spinner> <h4>Autenticando</h4>',
                 animation: 'fade-in',
                 showBackdrop: true,
                 maxWidth: 500,
@@ -226,13 +231,13 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                   disableBack: true
                 });
                 $ionicLoading.hide();
-                $state.go('child.profile',{}, {reload: true});
+                $state.go('paciente.profile',{}, {reload: true});
 
             })
             .error(function (data) {
                 console.log(data);
                 $ionicLoading.hide();
-                NotifyService.notify('<h5>¡Usuario o contraseña incorrectos!<br>Por favor verifique las credenciales</h5>',3000);
+                NotifyService.notify('<h4>¡Usuario o contraseña incorrectos!<br>Por favor verifique las credenciales</h4>',3000);
                 $scope.loginData.loginPassword = "";
             });
         } // else empty
@@ -241,7 +246,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
     $scope.cerrarSesion = function () {
         $ionicLoading.show({
-            template: '<ion-spinner icon="circles"></ion-spinner> <h5>Cerrando sesión</h5>',
+            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cerrando sesión</h4>',
             animation: 'fade-in',
             showBackdrop: true,
             maxWidth: 500,

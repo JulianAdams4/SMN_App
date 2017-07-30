@@ -12,31 +12,44 @@
         <ion-nav-view name="menuContent" ng-class="{expanded: isExpanded}" ></ion-nav-view>
     </ion-side-menu-content>
     <ion-side-menu side="right">
-        <ion-header-bar class="expanded" style="background: url(img/login.jpg) repeat-x center center;">
-            <span class="avatar" style="background: url(img/alert1.png); background-size: cover; margin-top:40px;"></span>
-            <h2 style="color:#fff;text-shadow: 0 1px 0px #000; font-size:1.3em; font-weight:bolder;">School Alert</h2>
+        
+        <ion-header-bar class="expanded" style="background-color:#fff;">
+            <span class="avatar-pf"></span>
+            <h2 style="color:#000;text-shadow: 0 1px 0px #000;font-size:1.3em;">SMN</h2>
         </ion-header-bar>
+
         <ion-content class="stable-bg has-expanded-header" style="padding-top:50px;">
-            <ion-list>
+            <ion-list id="sidemenu" style="padding-top:20px;">
                 <ion-item nav-clear menu-close ui-sref="child.profile">
-                    Perfil
+                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; Perfil
                 </ion-item>
+
                 <ion-item nav-clear menu-close ui-sref="child.tareas">
+                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
                     Tareas
                 </ion-item>
+
                 <ion-item nav-clear menu-close ui-sref="child.calendario">
+                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
                     Calendario de eventos
                 </ion-item>
+
                 <ion-item nav-clear menu-close ui-sref="child.horario">
+                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
                     Horario de clases
                 </ion-item>
+
                 <ion-item nav-clear menu-close ui-sref="child.calificaciones">
+                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
                     Calificacioness
                 </ion-item>
+
                 <ion-item nav-clear menu-close ng-click="cerrarSesion()">
+                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
                     Cerrar sesión...
                 </ion-item>
             </ion-list>
         </ion-content>
+
     </ion-side-menu>
 </ion-side-menus>

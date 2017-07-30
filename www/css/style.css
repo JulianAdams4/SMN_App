@@ -44,9 +44,13 @@ ion-spinner * {
     position: absolute;
 }
 
-.menu .avatar {
-    height: 88px;
-    width: 88px;
+.menu .avatar-pf {
+    margin: 0 auto;
+    width: 60%;
+    background: url('../img/logoSMN.jpg'); 
+    background-size: 100% 100%; 
+    margin-top:16px;
+    margin-bottom: 16px;
 }
 
 .menu.menu-left * {
@@ -143,3 +147,9 @@ ion-spinner * {
     margin-top: -30px; /* Note, this must be half the font size */
     color: $light;
 }
+
+/*
+#sidemenu ion-item {
+    margin-left:16px;
+}
+*/
