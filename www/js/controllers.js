@@ -6,8 +6,8 @@
 angular.module('starter.controllers', ['ionic-datepicker'])
 
 .constant('API', {
-//  url: 'http://apismn.herokuapp.com/api'
-  url: 'http://localhost:3000/api'
+  url: 'http://apismn.herokuapp.com/api'
+//  url: 'http://localhost:3000/api'
 })
 
 .config(function (ionicDatePickerProvider) {
