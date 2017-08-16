@@ -75,70 +75,56 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
-    .state('paciente.tareas', {
-        url: '/tareas',
+    .state('paciente.centros', {
+        url: '/centros',
         views: {
             'menuContent': {
-                templateUrl: 'templates/paciente/tareasChild.html',
-                controller: 'TareasCtrl'
+                templateUrl: 'templates/paciente/centro.html',
+                controller: 'CentrosCtrl'
             },
             'fabContent': ''
         }
     })
 
-    .state('paciente.detalleTarea', {
-        url: '/tareas/:idTarea',
+    .state('paciente.control', {
+        url: '/control',
         views: {
             'menuContent': {
-                templateUrl: 'templates/paciente/detalleTareaChild.html',
-                controller: 'DetalleTareaCtrl'
-            },
-            'fabContent': {
-                template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900" ng-click="marcarTarea()"><i class="icon ion-checkmark"></i></button>',
-                controller: 'DetalleTareaCtrl'
-            }
-        }
-    })
-
-    .state('paciente.horario', {
-        url: '/horario',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/paciente/horario.html',
-                controller: 'CalendarioCtrl'
+                templateUrl: 'templates/paciente/datosControl.html',
+                controller: 'ControlCtrl'
             },
             'fabContent': ''
         }
     })
 
-    .state('paciente.calendario', {
-        url: '/calendario',
+    .state('paciente.plan', {
+        url: '/plan',
         views: {
             'menuContent': {
-                templateUrl: 'templates/paciente/calendario.html',
-                controller: 'HorarioCtrl'
+                templateUrl: 'templates/paciente/plan.html',
+                controller: 'PlanCtrl'
             },
             'fabContent': ''
         }
     })
 
-    .state('paciente.calificaciones', {
-        url: '/calificaciones',
+    .state('paciente.citas', {
+        url: '/citas',
         views: {
             'menuContent': {
-                templateUrl: 'templates/paciente/calificaciones.html',
-                controller: 'CalificacionesCtrl'
+                templateUrl: 'templates/paciente/citas.html',
+                controller: 'CitasCtrl'
             },
             'fabContent': ''
         }
     })
 
-    .state('paciente.detalleCalificacion', {
-        url: '/calificaciones/:idCalif',
+    .state('paciente.logros', {
+        url: '/logros',
         views: {
             'menuContent': {
-                templateUrl: 'templates/paciente/detalleCalificacion.html',
-                controller: 'DetalleCalificacionCtrl'
+                templateUrl: 'templates/paciente/logros.html',
+                controller: 'LogrosCtrl'
             },
             'fabContent': ''
         }

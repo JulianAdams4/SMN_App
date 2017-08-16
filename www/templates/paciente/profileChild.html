@@ -1,7 +1,7 @@
 <ion-view view-title="Perfil">
     <ion-content ng-class="{expanded:$scope.isExpanded}">
 
-        <div class="hero slide-up" style="background-image: url('img/orange-bg.png');">
+        <div class="hero slide-up" style="background-image: url('img/green-bg.png');">
             <div class="content" style="padding-bottom:10px;">
                 <div class="avatar" style="background-image: url('img/profileChild.jpg'); margin-bottom:0px;"></div>
                 <h3><a class="light">
@@ -11,26 +11,23 @@
             </div>
         </div>
 
-        <h4 class="content padding double-padding-x text-center"> Tareas recientes </h4>
+        <h4 class="content padding double-padding-x text-center"> Acceso rápido </h4>
 
         <div style="padding-left:10px; padding-right:10px;"> 
             <span>Nombre de la tarea</span> 
             <span class="pull-right">Estado</span> 
         </div>
         <div class="list animate-fade-slide-in-right">
-            <a href="#/child/tareas/001" class="item item-icon-right">
+            <a href="#/paciente/plan" class="item item-icon-right">
                 <h2> Mi plan nutricional </h2>
-                <p> Ciencias Naturales </p>
                 <i class="icon ion-alert-circled" style="color:orange"></i>
             </a>
-            <a href="#/child/tareas/002" class="item item-icon-right">
-                <h2> Escribir ensayo sobre el 24 de Julio </h2>
-                <p> Lenguaje y comunicación </p>
+            <a href="#/paciente/control" class="item item-icon-right">
+                <h2> Mis datos de control </h2>
                 <i class="icon ion-checkmark-circled" style="color:green"></i>
             </a>
-            <a href="#/child/tareas/003" class="item item-icon-right">
-                <h2> Miscelánea de ejercicios </h2>
-                <p> Matemáticas </p>
+            <a href="#/paciente/logros" class="item item-icon-right">
+                <h2> Mis logros </h2>
                 <i class="icon ion-close-circled" style="color:red"></i>
             </a>
         </div>

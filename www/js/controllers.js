@@ -258,7 +258,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 })
 
-.controller('TareasCtrl', function(
+.controller('CentrosCtrl', function(
     $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate) {
 
     // Set Header
@@ -286,7 +286,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 })
 
 
-.controller('DetalleTareaCtrl', function(ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, 
+.controller('ControlCtrl', function(ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, 
                                          $scope, $stateParams, $timeout, 
                                          $window) {
 
@@ -303,8 +303,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     ionicMaterialMotion.fadeSlideInRight();
 
     // Set Ink
-    ionicMaterialInk.displayEffect();
-
+//    ionicMaterialInk.displayEffect();
+    
     // Cargar datos
     $scope.init = function () {
         // Boton atrás
@@ -472,7 +472,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 })
 
 
-.controller('CalendarioCtrl', function($scope, $stateParams, $timeout, 
+.controller('PlanCtrl', function($scope, $stateParams, $timeout, 
                                         ionicMaterialInk, ionicMaterialMotion, ionicDatePicker) {
 
     $scope.$parent.showHeader();
@@ -552,7 +552,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 })
 
 
-.controller('HorarioCtrl', function($scope, $stateParams, $timeout, 
+.controller('CitasCtrl', function($scope, $stateParams, $timeout, 
                                         ionicMaterialInk, ionicMaterialMotion, ionicDatePicker) {
 
     $scope.$parent.showHeader();
@@ -574,7 +574,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     */
 })
 
-.controller('CalificacionesCtrl', function($scope, $stateParams, $timeout, 
+.controller('LogrosCtrl', function($scope, $stateParams, $timeout, 
                                         ionicMaterialInk, ionicMaterialMotion) {
 
     $scope.$parent.showHeader();
