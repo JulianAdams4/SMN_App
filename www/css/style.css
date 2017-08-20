@@ -153,3 +153,7 @@ ion-spinner * {
     margin-left:16px;
 }
 */
+
+.nav-bar-block, .bar {
+  background-color: inherit !important;
+}

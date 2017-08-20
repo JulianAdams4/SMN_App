@@ -17,6 +17,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         if (window.StatusBar) {
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
+            /*StatusBar.overlaysWebView(false);
+            StatusBar.backgroundColorByHexString('#f2aa00');*/
         }
     });
 })

@@ -6,7 +6,7 @@
 angular.module('starter.controllers', ['ionic-datepicker'])
 
 .constant('API', {
-  url: 'http://apismn.herokuapp.com/api'
+  url: 'http://apismn4movil.herokuapp.com/api'
 //  url: 'http://localhost:3000/api'
 })
 
@@ -34,7 +34,12 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 .controller('AppCtrl', function(
     $scope, $ionicModal, $ionicPopover, $timeout, $window, $ionicHistory,
-    $state, $ionicLoading, LoginService) {
+    $state, $ionicLoading, LoginService, $rootScope) {
+
+    // Color de la Status bar
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $rootScope.viewColor = '#f2aa00';
+    });
 
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
