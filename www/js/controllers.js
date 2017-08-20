@@ -402,8 +402,14 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
     // Nombres ficticios
     $scope.nombreChild = "Julián Adams";
-    $scope.nombreParent = "Elizabeth Sánchez";
-    $scope.nombreTeacher = "Erick Pérez";
+
+    $scope.info = [
+        { name: 'Nombres y apellidos', value: 'Julián Erick Adams Escobar' },
+        { name: 'Cédula', value: '0950322529' },
+        { name: 'Fecha de nacimiento', value: '01/01/1990' },
+        { name: 'Sexo', value: 'Masculino' },
+        { name: 'Correo electrónico', value: 'jadams@espol.edu.ec' },
+    ];
 
     // Set Header
     $scope.$parent.showHeader();
@@ -413,20 +419,20 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     $scope.$parent.setHeaderFab(false);
 
     // Set Motion
-    $timeout(function() {
+    /* $timeout(function() {
         ionicMaterialMotion.slideUp({
             selector: '.slide-up'
         });
-    }, 300);
+    }, 300); */
 
-    $timeout(function() {
+    /* $timeout(function() {
         ionicMaterialMotion.fadeSlideInRight({
             startVelocity: 3000
         });
-    }, 700);
+    }, 700); */
 
     // Set Ink
-    ionicMaterialInk.displayEffect();
+    // ionicMaterialInk.displayEffect();
 })
 
 .controller('EventosCtrl', function($scope, $stateParams, $timeout, 

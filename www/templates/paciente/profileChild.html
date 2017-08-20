@@ -1,35 +1,41 @@
 <ion-view view-title="Perfil">
     <ion-content ng-class="{expanded:$scope.isExpanded}">
-
-        <div class="hero slide-up" style="background-image: url('img/green-bg.png');">
-            <div class="content" style="padding-bottom:10px;">
-                <div class="avatar" style="background-image: url('img/profileChild.jpg'); margin-bottom:0px;"></div>
-                <h3><a class="light">
-                    <span ng-bind="nombreChild"></span>
-                </a></h3>
-                <!-- <h4><a class="light">Estudiante</a></h4> -->
+        <div class="col-md-12 col-xs-12 col-sm-12 text-center" style="height:45%; background:url('img/greenb.jpg'); background-size: 100% 100%;">
+            <!-- Avatar -->
+            <div class="col-md-12 col-xs-12 col-sm-12" style="height:60%;">
+                <div class="col-md-4 col-xs-4 col-sm-4 text-center"></div>
+                <div class="col-md-4 col-xs-4 col-sm-4 text-center" style="padding-top:20%;">
+                    <div class="avatar" 
+                         style="background-image:url('img/profileChild.jpg');margin: 0 auto; transform:scale(1.6);">
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-4 col-sm-4 text-center"></div>
+            </div>
+            <!-- Name -->
+            <div class="col-md-12 col-xs-12 col-sm-12 text-center" style="height:20%; padding-top:3%;"">
+                <h3><span ng-bind="nombreChild" style="color:#fff; font-weight:bold;"></span></h3>
+            </div>
+            <!-- Editar perfil -->
+            <div class="col-md-12 col-xs-12 col-sm-12 text-center" style="height:20%;">
+                <div style="padding-left:10%;padding-right:10%;">
+                    <a href="#/paciente/editarPerfil" class="btn" 
+                       style="border:2px solid #fff; background-color:#f2aa00!important; color:#fff; border-radius:15px; font-weight:bold;">
+                       Editar perfil
+                    </a>
+                </div>
             </div>
         </div>
 
-        <h4 class="content padding double-padding-x text-center"> Acceso rápido </h4>
-
-        <div style="padding-left:10px; padding-right:10px;"> 
-            <span>Nombre de la tarea</span> 
-            <span class="pull-right">Estado</span> 
-        </div>
-        <div class="list animate-fade-slide-in-right">
-            <a href="#/paciente/plan" class="item item-icon-right">
-                <h2> Mi plan nutricional </h2>
-                <i class="icon ion-alert-circled" style="color:orange"></i>
-            </a>
-            <a href="#/paciente/control" class="item item-icon-right">
-                <h2> Mis datos de control </h2>
-                <i class="icon ion-checkmark-circled" style="color:green"></i>
-            </a>
-            <a href="#/paciente/logros" class="item item-icon-right">
-                <h2> Mis logros </h2>
-                <i class="icon ion-close-circled" style="color:red"></i>
-            </a>
+        <div class="col-md-12 col-xs-12 col-sm-12 text-center" style="height:55%; padding-top:4%;">
+            <div class="list">
+                <div class="item" style="padding:1%;" ng-repeat="item in info">
+                  <div class="text-center">
+                    <h3 class="" style="font-weight:bold" ng-bind="item.name"></h3>
+                    <h3 class="dark" ng-bind="item.value"></h3>
+                  </div>
+                  <hr style="margin:4px 30px;">
+                </div>
+            </div>
         </div>
 
     </ion-content>
