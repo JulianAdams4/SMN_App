@@ -8,6 +8,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 })
 
 
+
 .config(function (ionicDatePickerProvider) {
     var datePickerObj = {
       inputDate: new Date(),
@@ -28,6 +29,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     };
     ionicDatePickerProvider.configDatePicker(datePickerObj);
 })
+
 
 
 .controller('AppCtrl', function(
@@ -120,7 +122,6 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     };
 
 
-
     /*//////////////////////////////////////////
         Usado por el menú desplegable lateral
     //////////////////////////////////////////*/
@@ -140,6 +141,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 })
 
 
+
 .controller('InitLoginCtrl', function(
     $scope, $window, $ionicHistory, $state) {
 
@@ -154,6 +156,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         });
     }
 })
+
 
 
 .controller('LoginCtrl', function(
@@ -258,6 +261,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 })
 
+
+
 .controller('CentrosCtrl', function(
     $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate) {
 
@@ -283,6 +288,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     // Set Ink
     //ionicMaterialInk.displayEffect();
 })
+
 
 
 .controller('ControlCtrl', function(
@@ -354,6 +360,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     }
 
 })
+
 
 
 .controller('ProfileCtrl', function(
@@ -448,17 +455,23 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         PacienteService.editarPaciente($rootScope.paciente)
         .success(function (data) {
-            $window.location.href = '#/paciente/profile';
             NotifyService.notify('<h4>Se ha actualizado la información<br>de su perfil exitosamente</h4>',3000);
+            $timeout(function() {
+                $window.location.href = '#/paciente/profile';
+            },3000);
         })
         .error(function (data) {
             console.log(data);
-            NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo actualizar los datos</h4>',3000);
-            $window.location.href = '#/paciente/profile';
+            var errMsg = data.message.split("</i>")[1];
+            var str = errMsg || 'Ha ocurrido un error<br>y no se pudo actualizar los datos';
+            str = '<h4>' + str + '</h4>';
+            NotifyService.notify(str,4000);
         });
     }
 
 })
+
+
 
 .controller('EventosCtrl', function(
     $scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicNavBarDelegate) {
@@ -485,6 +498,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 })
 
 
+
 .controller('AlertasCtrl', function($scope, $stateParams, $timeout, 
                                     ionicMaterialMotion, ionicMaterialInk, $ionicNavBarDelegate) {
     // Set Header
@@ -507,6 +521,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     ionicMaterialInk.displayEffect();
 
 })
+
 
 
 .controller('PlanCtrl', function($scope, $stateParams, $timeout, 
@@ -589,6 +604,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 })
 
 
+
 .controller('CitasCtrl', function($scope, $stateParams, $timeout, 
                                         ionicMaterialInk, ionicMaterialMotion, ionicDatePicker) {
 
@@ -610,6 +626,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     });
     */
 })
+
+
 
 .controller('LogrosCtrl', function($scope, $stateParams, $timeout, 
                                         ionicMaterialInk, ionicMaterialMotion) {

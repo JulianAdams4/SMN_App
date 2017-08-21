@@ -88,7 +88,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 controller: 'ProfileCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-submit-prof" class="button button-fab button-fab-bottom-right theme-color-app" ng-click="submitProfile()"><i class="icon ion-checkmark"></i></button>',
+                template: '<button id="fabSubProf" class="button button-fab button-fab-bottom-right theme-color-app" ng-click="submitProfile()"><i class="icon ion-checkmark"></i></button>',
                 controller: 'ProfileCtrl'
             }
         }
