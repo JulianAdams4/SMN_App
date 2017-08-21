@@ -1,14 +1,12 @@
 /* global angular, document, window */
 'use strict';
-
-// APIEndPoint.url
-
 angular.module('starter.controllers', ['ionic-datepicker'])
 
 .constant('API', {
   url: 'http://apismn4movil.herokuapp.com/api'
 //  url: 'http://localhost:3000/api'
 })
+
 
 .config(function (ionicDatePickerProvider) {
     var datePickerObj = {
@@ -33,8 +31,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 
 .controller('AppCtrl', function(
-    $scope, $ionicModal, $ionicPopover, $timeout, $window, $ionicHistory,
-    $state, $ionicLoading, LoginService, $rootScope) {
+    $scope, $ionicModal, $ionicPopover, $timeout, $window, $ionicHistory, $state, $ionicLoading, 
+    LoginService, $rootScope) {
 
     // Color de la Status bar
     $scope.$on('$ionicView.beforeEnter', function() {
@@ -159,9 +157,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 
 .controller('LoginCtrl', function(
-    $scope, $timeout, $stateParams, ionicMaterialInk, $ionicModal, $ionicLoading, 
-    $ionicHistory, $state, $ionicPopup, $window, $rootScope, 
-    NotifyService, LoginService) {
+    $scope, $timeout, $stateParams, ionicMaterialInk, $ionicModal, $ionicLoading, $ionicHistory, 
+    $state, $ionicPopup, $window, $rootScope, NotifyService, LoginService) {
 
     $scope.init = function () {
         if ( $scope.isSessionActive() ) {
@@ -205,8 +202,6 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         // Campos vacios
         if( $scope.loginData.loginUser=="" || $scope.loginData.loginPassword=="" ){
             NotifyService.notify('<h4>¡Ingrese credenciales válidas!</h4>');
-            //alert('Ingrese credenciales válidas');
-            //return false;
         }
         else {
             // Animation
@@ -284,36 +279,35 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     }, 300);
     */
     // Set Motion
-    ionicMaterialMotion.fadeSlideInRight();
-
+    //ionicMaterialMotion.fadeSlideInRight();
     // Set Ink
-    ionicMaterialInk.displayEffect();
+    //ionicMaterialInk.displayEffect();
 })
 
 
-.controller('ControlCtrl', function(ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, 
-                                         $scope, $stateParams, $timeout, 
-                                         $window) {
+.controller('ControlCtrl', function(
+    ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, $scope, $stateParams, $timeout, 
+    $window) {
 
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     // Boton atrás
-    $ionicNavBarDelegate.showBackButton(true);
+    $ionicNavBarDelegate.showBackButton(false);
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
 
     // Set Motion
-    ionicMaterialMotion.fadeSlideInRight();
+    //ionicMaterialMotion.fadeSlideInRight();
 
     // Set Ink
-//    ionicMaterialInk.displayEffect();
+    //ionicMaterialInk.displayEffect();
     
     // Cargar datos
     $scope.init = function () {
         // Boton atrás
-        $ionicNavBarDelegate.showBackButton(true);
+        //$ionicNavBarDelegate.showBackButton(true);
 
         var id = $stateParams.idTarea;
 
@@ -327,42 +321,6 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                         descripcion: "Lorem ipsum dolor sit amet. Nam pharetra ipsum et eleifend volutpat. Proin ultrices rutrum sapien, id feugiat arcu vestibulum pretium. Sed cursus nisl massa, ut porta ipsum sagittis sit amet. Quisque a nisi non arcu vehicula porttitor. Nunc nec erat dui. Sed at arcu non neque semper dignissim", 
                         fechaEntrega: "24-Julio-2017", 
                         estado: "Pendiente"
-                    }
-                    break;
-                case "002":
-                    $scope.viewData = {
-                        titulo: "Escribir ensayo sobre el 24 de Julio", 
-                        materia: "Lenguaje y comunicación", 
-                        descripcion: "Lorem ipsum dolor sit amet. Nam pharetra ipsum et eleifend volutpat. Proin ultrices rutrum sapien, id feugiat arcu vestibulum pretium. Sed cursus nisl massa, ut porta ipsum sagittis sit amet. Quisque a nisi non arcu vehicula porttitor. Nunc nec erat dui.", 
-                        fechaEntrega: "24-Julio-2017", 
-                        estado: "Realizada"
-                    }
-                    break;
-                case "003":
-                    $scope.viewData = {
-                        titulo: "Miscelánea de ejercicios", 
-                        materia: "Matemáticas", 
-                        descripcion: "Lorem ipsum dolor sit amet. Nam pharetra ipsum et eleifend volutpat. Proin ultrices rutrum sapien, id feugiat arcu vestibulum pretium. Sed cursus nisl massa, ut porta ipsum sagittis sit amet. Quisque a nisi non arcu vehicula porttitor. Nunc nec erat dui.", 
-                        fechaEntrega: "24-Julio-2017", 
-                        estado: "No realizada"
-                    }
-                    break;
-                case "004":
-                    $scope.viewData = {
-                        titulo: "Investigación sobre mitosis", 
-                        materia: "Ciencias Naturales", 
-                        descripcion: "Lorem ipsum dolor sit amet. Nam pharetra ipsum et eleifend volutpat. Proin ultrices rutrum sapien, id feugiat arcu vestibulum pretium. Sed cursus nisl massa, ut porta ipsum sagittis sit amet. Quisque a nisi non arcu vehicula porttitor. Nunc nec erat dui.", 
-                        fechaEntrega: "24-Julio-2017", 
-                        estado: "Realizada"
-                    }
-                    break;
-                case "005":
-                    $scope.viewData = {
-                        titulo: "Ejercicios página 50", 
-                        materia: "Matemáticas", 
-                        descripcion: "Lorem ipsum dolor sit amet. Nam pharetra ipsum et eleifend volutpat. Proin ultrices rutrum sapien, id feugiat arcu vestibulum pretium. Sed cursus nisl massa, ut porta ipsum sagittis sit amet. Quisque a nisi non arcu vehicula porttitor. Nunc nec erat dui.", 
-                        fechaEntrega: "24-Julio-2017", 
-                        estado: "Realizada"
                     }
                     break;
                 case "006":
@@ -398,18 +356,9 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 })
 
 
-.controller('ProfileCtrl', function($scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk) {
-
-    // Nombres ficticios
-    $scope.nombreChild = "Julián Adams";
-
-    $scope.info = [
-        { name: 'Nombres y apellidos', value: 'Julián Erick Adams Escobar' },
-        { name: 'Cédula', value: '0950322529' },
-        { name: 'Fecha de nacimiento', value: '01/01/1990' },
-        { name: 'Sexo', value: 'Masculino' },
-        { name: 'Correo electrónico', value: 'jadams@espol.edu.ec' },
-    ];
+.controller('ProfileCtrl', function(
+    ionicMaterialMotion, ionicMaterialInk, $ionicNavBarDelegate, $scope, $stateParams, $timeout, 
+    $rootScope, PacienteService, NotifyService, $ionicLoading, $state, $window ) {
 
     // Set Header
     $scope.$parent.showHeader();
@@ -417,6 +366,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
+    $ionicNavBarDelegate.showBackButton(false);
 
     // Set Motion
     /* $timeout(function() {
@@ -424,19 +374,95 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             selector: '.slide-up'
         });
     }, 300); */
-
     /* $timeout(function() {
         ionicMaterialMotion.fadeSlideInRight({
             startVelocity: 3000
         });
     }, 700); */
-
     // Set Ink
     // ionicMaterialInk.displayEffect();
+
+    $scope.nombreChild = "";
+    $scope.info = [];
+    $scope.paciente = {}
+
+    function formatDate(date) {
+        var monthNames = [
+            "Ene", "Feb", "Mar", "Abr", 
+            "May", "Jun", "Jul", "Ago", 
+            "Sep", "Oct", "Nov", "Dic"
+        ];
+        var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+        return day + '/' + monthNames[monthIndex] + '/' + year;
+    }
+
+
+    $scope.getDatosPaciente = function () {
+        // Animation
+        $ionicLoading.show({
+            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 500,
+            showDelay: 0
+        });
+
+        PacienteService.getDatos()
+        .success(function (data) {
+            data.fechaNacimiento = new Date(data.fechaNacimiento);
+
+            $scope.nombreChild = data.nombres + ' ' + data.apellidos || 'Bienvenido';
+            $scope.info.push({ name: 'Nombres y apellidos', value: (data.nombres + ' ' + data.apellidos) || 'None'});
+            $scope.info.push({ name: 'Cédula', value: data.cedula || '0900000000' });
+            $scope.info.push({ name: 'Fecha de nacimiento', value: formatDate(data.fechaNacimiento) || formatDate(new Date()) });
+            $scope.info.push({ name: 'Sexo', value: data.sexo || 'Masculino' });
+            $scope.info.push({ name: 'Correo electrónico', value: data.email || 'none@gmail.com' });
+            $scope.paciente = data;
+            $rootScope.paciente = $scope.paciente;
+
+            $ionicLoading.hide();
+        })
+        .error(function (data) {
+            $ionicLoading.hide();
+            $scope.nombreChild = 'Bienvenido, usuario';
+            $scope.info.push({ name: 'Nombres y apellidos', value: 'None'});
+            $scope.info.push({ name: 'Cédula', value: '0900000000' });
+            $scope.info.push({ name: 'Fecha de nacimiento', value: formatDate(new Date()) });
+            $scope.info.push({ name: 'Sexo', value: 'Masculino' });
+            $scope.info.push({ name: 'Correo electrónico', value: 'none@gmail.com' });
+            NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo obtener los datos</h4>',3000);
+        });
+    }
+
+    $scope.submitProfile = function () {
+        // Animation
+        $ionicLoading.show({
+            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Guardando...</h4>',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 500,
+            showDelay: 0
+        });
+
+        PacienteService.editarPaciente($rootScope.paciente)
+        .success(function (data) {
+            $window.location.href = '#/paciente/profile';
+            NotifyService.notify('<h4>Se ha actualizado la información<br>de su perfil exitosamente</h4>',3000);
+        })
+        .error(function (data) {
+            console.log(data);
+            NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo actualizar los datos</h4>',3000);
+            $window.location.href = '#/paciente/profile';
+        });
+    }
+
 })
 
-.controller('EventosCtrl', function($scope, $stateParams, $timeout, 
-                                    ionicMaterialMotion, ionicMaterialInk, $ionicNavBarDelegate) {
+.controller('EventosCtrl', function(
+    $scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicNavBarDelegate) {
+
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();

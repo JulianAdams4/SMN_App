@@ -5,7 +5,6 @@ angular.module('starter.services', [])
 //////////////////////////////////////// */
 .service('NotifyService', function ( $ionicLoading, $rootScope, $window ){
     return {
-
         notify: function (text, duration) {
             $ionicLoading.show({
                 template: text, animation: 'fade-in',
@@ -16,7 +15,6 @@ angular.module('starter.services', [])
                 $ionicLoading.hide();
             }, duration);
         }
-
     }
 })
 
@@ -94,6 +92,55 @@ angular.module('starter.services', [])
     }
 })
 
+
+.service('PacienteService', function ( $rootScope, $window, API, $http ){
+    // Cast function
+    Object.toparams = function ObjecttoParams(obj) {
+        var p = [];
+        for (var key in obj){
+            p.push(key + '=' + encodeURIComponent(obj[key]));
+        }
+        return p.join('&');
+    };
+
+    return {
+        getDatos: function () {
+            var myobject = {};
+            // Data for requeriment
+            var req = {
+                method: 'GET',
+                url: API.url + '/pacientes/perfil',
+                data: Object.toparams(myobject),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Cache-Control': 'private'
+                }
+            }
+            // Return promise
+            return $http(req)
+            .success(function(data, status, headers, config){})
+            .error(function(data, status, headers, config){});
+        },
+
+        editarPaciente: function (datosPaciente) {
+            var info = { paciente: datosPaciente }
+console.log(datosPaciente)
+            // Data for requeriment
+            var req = {
+                method: 'PUT',
+                url: API.url + '/pacientes/perfil',
+                data: info,
+                headers: {
+                    'Cache-Control': 'private'
+                }
+            }
+            // Return promise
+            return $http(req)
+            .success(function(data, status, headers, config){})
+            .error(function(data, status, headers, config){});
+        }
+    }
+})
 
 /*//////////////////////////////////////////
     Servicio que consume el API 

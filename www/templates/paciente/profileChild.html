@@ -1,13 +1,12 @@
-<ion-view view-title="Perfil">
+<ion-view view-title="Perfil" ng-init="getDatosPaciente()">
     <ion-content ng-class="{expanded:$scope.isExpanded}">
-        <div class="col-md-12 col-xs-12 col-sm-12 text-center" style="height:45%; background:url('img/greenb.jpg'); background-size: 100% 100%;">
+        <div class="col-md-12 col-xs-12 col-sm-12 text-center hero" style="height:45%; background:url('img/greenb.jpg'); background-size: 100% 100%;">
             <!-- Avatar -->
             <div class="col-md-12 col-xs-12 col-sm-12" style="height:60%;">
                 <div class="col-md-4 col-xs-4 col-sm-4 text-center"></div>
-                <div class="col-md-4 col-xs-4 col-sm-4 text-center" style="padding-top:20%;">
-                    <div class="avatar" 
-                         style="background-image:url('img/profileChild.jpg');margin: 0 auto; transform:scale(1.6);">
-                    </div>
+                <div class="col-md-4 col-xs-4 col-sm-4 text-center" style="padding:15% 0% 0% 0%;">
+                    <!-- Profile pic -->
+                    <div class="my-avatar"></div>
                 </div>
                 <div class="col-md-4 col-xs-4 col-sm-4 text-center"></div>
             </div>
@@ -18,8 +17,8 @@
             <!-- Editar perfil -->
             <div class="col-md-12 col-xs-12 col-sm-12 text-center" style="height:20%;">
                 <div style="padding-left:10%;padding-right:10%;">
-                    <a href="#/paciente/editarPerfil" class="btn" 
-                       style="border:2px solid #fff; background-color:#f2aa00!important; color:#fff; border-radius:15px; font-weight:bold;">
+                    <a href="#/paciente/editarPerfil" class="btn theme-color-app" 
+                       style="border:2px solid #fff; border-radius:15px; font-weight:bold;">
                        Editar perfil
                     </a>
                 </div>
@@ -30,8 +29,8 @@
             <div class="list">
                 <div class="item" style="padding:1%;" ng-repeat="item in info">
                   <div class="text-center">
-                    <h3 class="" style="font-weight:bold" ng-bind="item.name"></h3>
-                    <h3 class="dark" ng-bind="item.value"></h3>
+                    <h3 class="" style="font-weight:bold; font-size:1.2em;" ng-bind="item.name"></h3>
+                    <h3 class="dark" style="font-size:1.2em;" ng-bind="item.value"></h3>
                   </div>
                   <hr style="margin:4px 30px;">
                 </div>

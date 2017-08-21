@@ -42,6 +42,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         controller: 'InitLoginCtrl'
     })
 
+    // Login 
     .state('app.login', {
         url: '/login',
         views: {
@@ -66,6 +67,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         controller: 'AppCtrl'
     })
 
+    // Pagina principal 
     .state('paciente.profile', {
         url: '/profile',
         views: {
@@ -77,6 +79,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
+    // Formulario datos del perfil 
+    .state('paciente.editProfile', {
+        url: '/editarPerfil',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/paciente/formPerfil.html',
+                controller: 'ProfileCtrl'
+            },
+            'fabContent': {
+                template: '<button id="fab-submit-prof" class="button button-fab button-fab-bottom-right theme-color-app" ng-click="submitProfile()"><i class="icon ion-checkmark"></i></button>',
+                controller: 'ProfileCtrl'
+            }
+        }
+    })
+
+    // Centros médicos 
     .state('paciente.centros', {
         url: '/centros',
         views: {
@@ -88,6 +106,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
+    // Datos de control 
     .state('paciente.control', {
         url: '/control',
         views: {
@@ -99,6 +118,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
+    // Plan nutricional 
     .state('paciente.plan', {
         url: '/plan',
         views: {
@@ -110,6 +130,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
+    // Citas 
     .state('paciente.citas', {
         url: '/citas',
         views: {
@@ -121,6 +142,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
+    // Estadisticas 
     .state('paciente.logros', {
         url: '/logros',
         views: {
