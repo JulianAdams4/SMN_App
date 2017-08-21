@@ -1,20 +1,90 @@
-<ion-view view-title="Logros">
+<ion-view view-title="Mis logros" ng-init="init()">
     <ion-content ng-class="{expanded:isExpanded}">
-        <div class="content" style="padding:10px;">
+        <div class="content" style="padding:10px 2px 10px 2px; width: 100%;">
 
-			<div class="list">
-		  		<div class="item item-divider">
-			        <div class="row header" style="margin-left:0px;">
-			          	<div class="text-center"> Listado de materias </div>
-			        </div>
-		  		</div>
+      	  <div style="background-color:#fff; padding:10px;">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0px;">
 
-				<a class="item" ng-repeat="data in calificaciones" href="#/child/calificaciones/{{data.id}}" style="padding-left:40px">
-			        <p> {{data.materia}} </p>
-					<small> Toque para ver más detalles </small>
-				</a>
-			</div>
+              <div ng-if="!suficientesDatos" class="text-center" style="padding:10% 0% 0% 0%;">
+              	<i class="ion-android-upload dark" style="font-size:3.5em;"></i>
+                <h4 class="dark"> 
+                  No posee datos suficientes para mostrar este contenido 
+                </h4>
+              </div>
 
-        </div>
-    </ion-content>
+              <div ng-if="suficientesDatos" class="col-lg-12 col-md-12 col-xs-12" style="padding:0px;">
+		        <div class="list" style="padding:2% 0% 0% 0%; margin-bottom:0px;">
+		          <label class="item item-input item-select">
+		            <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp;&nbsp;&nbsp;
+		            <h3 class="input-label" style="font-weight:bold; font-size:1.2em;">
+		           	  Tipo de gráfico*
+		            </h3>
+		            <select ng-model="formularioEC.tipo">
+		              <option value="Lineas"> Líneas </option>
+		              <option value="Barras"> Barras </option>
+		            </select>
+		          </label>
+
+		          <label class="item item-input item-select">
+		            <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp;&nbsp;&nbsp;
+		            <h3 class="input-label" style="font-weight:bold; font-size:1.2em;">
+		           	  Par&aacute;metro*
+		            </h3>
+		            <select ng-model="formularioEC.parametro" ng-options="param.value as param.label for param in parametros">
+		            </select>
+		          </label>
+
+		          <label class="item item-input item-stacked-label">
+		            <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp;
+		            <h3 class="input-label" style="font-weight:bold; font-size:1.2em; padding-bottom:0px;">Desde*</h3>
+		            <input type="date" ng-model="formularioEC.inicio" style="padding-left:6%;">
+		          </label>
+
+		          <label class="item item-input item-stacked-label">
+		            <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp;
+		            <h3 class="input-label" style="font-weight:bold; font-size:1.2em; padding-bottom:0px;">Hasta*</h3>
+		            <input type="date" ng-model="formularioEC.fin" style="padding-left:6%;">
+		          </label>
+		        </div>
+				<div class="col-lg-12 col-md-12 col-xs-12 text-center">
+				  <button type="button" 
+						  ng-click="submit()" 
+						  class="button button-full"
+						  style="background-color: #f2aa00!important; color: #fff;"> 
+						  Ver mis logros 
+                  </button>
+				</div>
+
+	            <div ng-if="formularioEC.tipo=='Lineas' ? true : false" class="col-lg-9 col-md-9 col-xs-12" style="padding:0px; height:100%; padding-top:4%;">
+	                <div style="width:100%;">
+	                    <canvas id="line" 
+	                            class="chart chart-line" 
+	                            chart-data="data"
+	                            chart-labels="labels" 
+	                            chart-series="series" 
+	                            chart-options="lineOptions"
+	                            chart-dataset-override="datasetOverride">
+	                    </canvas>
+	                </div>
+	            </div>
+
+              	<div ng-if="formularioEC.tipo=='Barras' ? true : false" class="col-lg-9 col-md-9 col-xs-12" style="padding:0px; height:100%; padding-top:4%;">
+                  <div style="width:100%;">
+                      <canvas id="bar" 
+                          class="chart chart-bar" 
+                          chart-data="data"
+                          chart-labels="labels" 
+                          chart-series="series" 
+                          chart-options="barOptions"
+                          chart-dataset-override="datasetOverride">
+                      </canvas>
+                  </div>
+              	</div>
+              </div> <!-- datos suficientes -->
+
+      		</div>
+  		  </div>
+  		  
+  		</div> <!-- content -->
+  	</ion-content>
 </ion-view>

@@ -1,35 +1,66 @@
-<ion-view view-title="Centros">
+<ion-view view-title="Centros" ng-init="init()">
     <ion-content ng-class="{expanded:isExpanded}">
-        <div class="content" style="padding-top:20px;">
+        <div class="content" style="padding:5% 5% 5% 5%;">
 
-            <div ng-if="listaTareas && listaTareas.length>0" style="padding-left:15px; padding-right:10px;"> 
-                <span>Nombre de la tarea</span> 
-                <span class="pull-right">Estado</span> 
-            </div>
+            <div class="list">
+              <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                <h3 class="dark" style="font-weight:bold; font-size:1.2em;">Datos del centro</h3>
+              </div>
 
-            <div class="list animate-fade-slide-in-right">
-                
-                <a href="#/child/tareas/001" class="item item-icon-right">
-                    <h2> Investigación sobre célula vegetal </h2>
-                    <p> Ciencias Naturales </p>
-                    <i class="icon ion-alert-circled" style="color:orange"></i>
-                </a>
-                <a href="#/child/tareas/002" class="item item-icon-right">
-                    <h2> Escribir ensayo sobre el 24 de Julio </h2>
-                    <p> Lenguaje y comunicación </p>
-                    <i class="icon ion-checkmark-circled" style="color:green"></i>
-                </a>
-                <a href="#/child/tareas/003" class="item item-icon-right">
-                    <h2> Miscelánea de ejercicios </h2>
-                    <p> Matemáticas </p>
-                    <i class="icon ion-close-circled" style="color:red"></i>
-                </a>
-                <a href="#/child/tareas/004" class="item item-icon-right">
-                    <h2> Investigación sobre mitosis </h2>
-                    <p> Ciencias Naturales </p>
-                    <i class="icon ion-checkmark-circled" style="color:green"></i>
-                </a>
+              <div class="item" style="padding:3% 1%;">
+                <div class="text-center">
+                  <h3 style="font-weight:bold; font-size:1.2em;"> Dirección </h3>
+                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.direccion"></h3>
+                </div>
+              </div>
 
+              <div class="item" style="padding:3% 1%;">
+                <div class="text-center">
+                  <h3 style="font-weight:bold; font-size:1.2em;"> Teléfono </h3>
+                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.telefono"></h3>
+                </div>
+              </div>
+
+              <div class="item" style="padding:3% 1%;">
+                <div class="text-center">
+                  <h3 style="font-weight:bold; font-size:1.2em;">Horarios de atención</h3>
+                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.horariosAtencion"></h3>
+                </div>
+              </div>
+
+              <div class="item" style="padding:3% 1%;">
+                <div class="text-center">
+                  <h3 style="font-weight:bold; font-size:1.2em;">Servicios</h3>
+                  <h3 class="dark line-clamp" style="font-size:1.2em;" ng-bind="centro.servicios"></h3>
+                </div>
+              </div>
+
+              <hr style="margin:10px 30px;">
+
+              <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                <h3 class="dark" style="font-weight:bold; font-size:1.2em;">Datos de la nutricionista</h3>
+              </div>
+
+              <div class="item" style="padding:3% 1%;">
+                <div class="text-center">
+                  <h3 style="font-weight:bold; font-size:1.2em;">Nombres y apellidos</h3>
+                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.nutricionista.nombres + ' ' + centro.nutricionista.apellidos"></h3>
+                </div>
+              </div>
+
+              <div class="item" style="padding:3% 1%;">
+                <div class="text-center">
+                  <h3 style="font-weight:bold; font-size:1.2em;">Estudios</h3>
+                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.nutricionista.estudios"></h3>
+                </div>
+              </div>
+
+              <div class="item" style="padding:3% 1%;">
+                <div class="text-center">
+                  <h3 style="font-weight:bold; font-size:1.2em;">Especializaciones</h3>
+                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.nutricionista.especializaciones"></h3>
+                </div>
+              </div>
             </div>
 
         </div>

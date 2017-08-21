@@ -18,7 +18,8 @@
             <div class="col-md-12 col-xs-12 col-sm-12 text-center" style="height:20%;">
                 <div style="padding-left:10%;padding-right:10%;">
                     <a href="#/paciente/editarPerfil" class="btn theme-color-app" 
-                       style="border:2px solid #fff; border-radius:15px; font-weight:bold;">
+                       style="border:2px solid #fff; border-radius:15px; font-weight:bold;"
+                       ng-disabled="noUserData">
                        Editar perfil
                     </a>
                 </div>
@@ -27,10 +28,52 @@
 
         <div class="col-md-12 col-xs-12 col-sm-12 text-center" style="height:55%; padding-top:4%;">
             <div class="list">
-                <div class="item" style="padding:1%;" ng-repeat="item in info">
+                <div class="item" style="padding:1%;">
                   <div class="text-center">
-                    <h3 class="" style="font-weight:bold; font-size:1.2em;" ng-bind="item.name"></h3>
-                    <h3 class="dark" style="font-size:1.2em;" ng-bind="item.value"></h3>
+                    <h3 class="" style="font-weight:bold; font-size:1.2em;">
+                        Nombres y Apellidos
+                    </h3>
+                    <h3 class="dark" style="font-size:1.2em;" ng-bind="info.NombresApellidos"></h3>
+                  </div>
+                  <hr style="margin:4px 30px;">
+                </div>
+
+                <div class="item" style="padding:1%;">
+                  <div class="text-center">
+                    <h3 class="" style="font-weight:bold; font-size:1.2em;">
+                        C&eacute;dula
+                    </h3>
+                    <h3 class="dark" style="font-size:1.2em;" ng-bind="info.Cedula"></h3>
+                  </div>
+                  <hr style="margin:4px 30px;">
+                </div>
+
+                <div class="item" style="padding:1%;">
+                  <div class="text-center">
+                    <h3 class="" style="font-weight:bold; font-size:1.2em;">
+                        Fecha de nacimiento
+                    </h3>
+                    <h3 class="dark" style="font-size:1.2em;" ng-bind="info.fechaNacimiento"></h3>
+                  </div>
+                  <hr style="margin:4px 30px;">
+                </div>
+
+                <div class="item" style="padding:1%;">
+                  <div class="text-center">
+                    <h3 class="" style="font-weight:bold; font-size:1.2em;">
+                        Sexo
+                    </h3>
+                    <h3 class="dark" style="font-size:1.2em;" ng-bind="info.Sexo"></h3>
+                  </div>
+                  <hr style="margin:4px 30px;">
+                </div>
+
+                <div class="item" style="padding:1%;">
+                  <div class="text-center">
+                    <h3 class="" style="font-weight:bold; font-size:1.2em;">
+                        Correo electr&oacute;nico
+                    </h3>
+                    <h3 class="dark" style="font-size:1.2em;" ng-bind="info.Email"></h3>
                   </div>
                   <hr style="margin:4px 30px;">
                 </div>

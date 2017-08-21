@@ -124,7 +124,6 @@ angular.module('starter.services', [])
 
         editarPaciente: function (datosPaciente) {
             var info = { paciente: datosPaciente }
-console.log(datosPaciente)
             // Data for requeriment
             var req = {
                 method: 'PUT',

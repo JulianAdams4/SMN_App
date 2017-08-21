@@ -183,3 +183,15 @@ input[type=email]:focus {
     background-color:#f2aa00!important; 
     color:#fff;
 }
+
+.break-word {
+  width: 100%;
+  overflow-wrap: break-word;
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: -o-ellipsis-lastline;
+}

@@ -1,14 +1,13 @@
 /* global angular, document, window */
 'use strict';
-angular.module('starter.controllers', ['ionic-datepicker'])
+angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
 
 .constant('API', {
   url: 'http://apismn4movil.herokuapp.com/api'
 //  url: 'http://localhost:3000/api'
 })
 
-
-
+/*
 .config(function (ionicDatePickerProvider) {
     var datePickerObj = {
       inputDate: new Date(),
@@ -29,7 +28,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     };
     ionicDatePickerProvider.configDatePicker(datePickerObj);
 })
-
+*/
 
 
 .controller('AppCtrl', function(
@@ -121,7 +120,6 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         }
     };
 
-
     /*//////////////////////////////////////////
         Usado por el menú desplegable lateral
     //////////////////////////////////////////*/
@@ -176,13 +174,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         }
     }
 
-    /*
-    $scope.$parent.clearFabs();
-    $timeout(function() {
-        $scope.$parent.hideHeader();
-    }, 0);
-    */
-    ionicMaterialInk.displayEffect();
+    //ionicMaterialInk.displayEffect();
 
     // Create the login modal that we will use later
     $ionicModal.fromTemplateUrl('gbCaseEdit.html', {
@@ -204,7 +196,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     $scope.login = function () {
         // Campos vacios
         if( $scope.loginData.loginUser=="" || $scope.loginData.loginPassword=="" ){
-            NotifyService.notify('<h4>¡Ingrese credenciales válidas!</h4>');
+            NotifyService.notify('<h4>¡Ingrese credenciales válidas!</h4>', 3000);
         }
         else {
             // Animation
@@ -223,7 +215,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
             LoginService.loginUser( user, pass )
             .success(function (data) {
-                console.log(data);
+                //console.log(data);
                 var ls = {
                     sessionActive: true
                 };
@@ -238,7 +230,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
             })
             .error(function (data) {
-                console.log(data);
+                //console.log(data);
                 $ionicLoading.hide();
                 NotifyService.notify('<h4>¡Usuario o contraseña incorrectos!<br>Por favor verifique las credenciales</h4>',3000);
                 $scope.loginData.loginPassword = "";
@@ -264,7 +256,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 
 .controller('CentrosCtrl', function(
-    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate) {
+    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, 
+    CentroService ) {
 
     // Set Header
     $scope.$parent.showHeader();
@@ -276,17 +269,21 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     // Sin fabContent
     $scope.$parent.setHeaderFab(false);
 
-    // Delay expansion
-    /*
-    $timeout(function() {
-        $scope.isExpanded = true;
-        $scope.$parent.setExpanded(true);
-    }, 300);
-    */
-    // Set Motion
-    //ionicMaterialMotion.fadeSlideInRight();
-    // Set Ink
-    //ionicMaterialInk.displayEffect();
+    $scope.centro = {};
+
+    $scope.init = function () {
+        
+        CentroService.allCentros()
+        .success(function (data) {
+            var dataCentro = data[0];
+            $scope.centro = dataCentro;
+            console.log(dataCentro);
+        })
+        .error(function (data) {
+            console.log(data);
+        })
+    }
+
 })
 
 
@@ -303,52 +300,11 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
-
-    // Set Motion
-    //ionicMaterialMotion.fadeSlideInRight();
-
-    // Set Ink
-    //ionicMaterialInk.displayEffect();
     
     // Cargar datos
     $scope.init = function () {
-        // Boton atrás
-        //$ionicNavBarDelegate.showBackButton(true);
-
-        var id = $stateParams.idTarea;
-
         $scope.viewData = {}
-        if (id) {
-            switch(id) {
-                case "001":
-                    $scope.viewData = {
-                        titulo: "Investigación sobre célula vegetal", 
-                        materia: "Ciencias Naturales", 
-                        descripcion: "Lorem ipsum dolor sit amet. Nam pharetra ipsum et eleifend volutpat. Proin ultrices rutrum sapien, id feugiat arcu vestibulum pretium. Sed cursus nisl massa, ut porta ipsum sagittis sit amet. Quisque a nisi non arcu vehicula porttitor. Nunc nec erat dui. Sed at arcu non neque semper dignissim", 
-                        fechaEntrega: "24-Julio-2017", 
-                        estado: "Pendiente"
-                    }
-                    break;
-                case "006":
-                    $scope.viewData = {
-                        titulo: "Llevar diccionario", 
-                        materia: "Lenguaje y comunicación", 
-                        descripcion: "Lorem ipsum dolor sit amet. Nam pharetra ipsum et eleifend volutpat. Proin ultrices rutrum sapien, id feugiat arcu vestibulum pretium. Sed cursus nisl massa, ut porta ipsum sagittis sit amet. Quisque a nisi non arcu vehicula porttitor. Nunc nec erat dui.", 
-                        fechaEntrega: "24-Julio-2017", 
-                        estado: "Realizada"
-                    }
-                    break;
-                default:
-                    $scope.viewData = {
-                        titulo: "Titulo de la tarea", 
-                        materia: "Materia 1", 
-                        descripcion: "Lorem ipsum dolor sit amet. Nam pharetra ipsum et eleifend volutpat. Proin ultrices rutrum sapien, id feugiat arcu vestibulum pretium. Sed cursus nisl massa, ut porta ipsum sagittis sit amet. Quisque a nisi non arcu vehicula porttitor. Nunc nec erat dui.", 
-                        fechaEntrega: "24-Julio-2017", 
-                        estado: "Pendiente"
-                    }
-                    
-            } /* End switch */
-        }
+
     }
 
     $scope.marcarTarea = function () {
@@ -375,22 +331,14 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     $scope.$parent.setHeaderFab(false);
     $ionicNavBarDelegate.showBackButton(false);
 
-    // Set Motion
-    /* $timeout(function() {
-        ionicMaterialMotion.slideUp({
-            selector: '.slide-up'
-        });
-    }, 300); */
-    /* $timeout(function() {
-        ionicMaterialMotion.fadeSlideInRight({
-            startVelocity: 3000
-        });
-    }, 700); */
-    // Set Ink
-    // ionicMaterialInk.displayEffect();
-
     $scope.nombreChild = "";
-    $scope.info = [];
+    $scope.noUserData = false;
+    $scope.info = {};
+    $scope.info.NombresApellidos = "";
+    $scope.info.fechaNacimiento = "";
+    $scope.info.Cedula = "";
+    $scope.info.Sexo = "";
+    $scope.info.Email = "";
     $scope.paciente = {}
 
     function formatDate(date) {
@@ -418,27 +366,30 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         PacienteService.getDatos()
         .success(function (data) {
+            $scope.noUserData = false;
+            $scope.nombreChild = data.nombres.split(" ")[0] + ' ' + data.apellidos.split(" ")[0];
+            $scope.info.NombresApellidos = data.nombres + ' ' + data.apellidos;
             data.fechaNacimiento = new Date(data.fechaNacimiento);
-
-            $scope.nombreChild = data.nombres + ' ' + data.apellidos || 'Bienvenido';
-            $scope.info.push({ name: 'Nombres y apellidos', value: (data.nombres + ' ' + data.apellidos) || 'None'});
-            $scope.info.push({ name: 'Cédula', value: data.cedula || '0900000000' });
-            $scope.info.push({ name: 'Fecha de nacimiento', value: formatDate(data.fechaNacimiento) || formatDate(new Date()) });
-            $scope.info.push({ name: 'Sexo', value: data.sexo || 'Masculino' });
-            $scope.info.push({ name: 'Correo electrónico', value: data.email || 'none@gmail.com' });
+            $scope.info.fechaNacimiento = formatDate(data.fechaNacimiento);
+            $scope.info.Cedula = data.cedula;
+            $scope.info.Sexo = data.sexo;
+            $scope.info.Email = data.email;
             $scope.paciente = data;
             $rootScope.paciente = $scope.paciente;
 
             $ionicLoading.hide();
         })
         .error(function (data) {
-            $ionicLoading.hide();
+            $scope.noUserData = true;
             $scope.nombreChild = 'Bienvenido, usuario';
-            $scope.info.push({ name: 'Nombres y apellidos', value: 'None'});
-            $scope.info.push({ name: 'Cédula', value: '0900000000' });
-            $scope.info.push({ name: 'Fecha de nacimiento', value: formatDate(new Date()) });
-            $scope.info.push({ name: 'Sexo', value: 'Masculino' });
-            $scope.info.push({ name: 'Correo electrónico', value: 'none@gmail.com' });
+            $scope.info.NombresApellidos = 'None';
+            $scope.info.Cedula = '0900000000';
+            var today = new Date();
+            $scope.info.fechaNacimiento = formatDate(today);
+            $scope.info.Sexo = 'Masculino';
+            $scope.info.Email = 'none@gmail.com';
+
+            $ionicLoading.hide();
             NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo obtener los datos</h4>',3000);
         });
     }
@@ -455,16 +406,17 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         PacienteService.editarPaciente($rootScope.paciente)
         .success(function (data) {
+            $ionicLoading.hide();
             NotifyService.notify('<h4>Se ha actualizado la información<br>de su perfil exitosamente</h4>',3000);
             $timeout(function() {
                 $window.location.href = '#/paciente/profile';
             },3000);
         })
         .error(function (data) {
-            console.log(data);
             var errMsg = data.message.split("</i>")[1];
             var str = errMsg || 'Ha ocurrido un error<br>y no se pudo actualizar los datos';
             str = '<h4>' + str + '</h4>';
+            $ionicLoading.hide();
             NotifyService.notify(str,4000);
         });
     }
@@ -524,8 +476,9 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 
 
-.controller('PlanCtrl', function($scope, $stateParams, $timeout, 
-                                        ionicMaterialInk, ionicMaterialMotion, ionicDatePicker) {
+.controller('PlanCtrl', function(
+    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, ionicDatePicker, API, 
+    $http ) {
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -533,19 +486,25 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
 
-    // Activate ink for controller
-    /*
-    ionicMaterialInk.displayEffect();
+    $scope.descargarPlanVigente = function () {
+      var url = API.url + '/planNutricionalPacienteVigente';
+      $http({
+        method: 'GET', url: url, data: {}
+      })
+      .then(
+        function(response){
+          console.log(response.data[0].documento)
+          window.open(response.data[0].documento , '_blank', 'location=no');
+        }, 
+        function(errorResponse){
+          var defaultErrMessage = errorResponse.data.message || "Ha ocurrido un error <br> y no se pudo obtener sus logros";
+          NotifyService.notify(defaultErrMessage,4000);
+        }
+      );
 
-    ionicMaterialMotion.pushDown({
-        selector: '.push-down'
-    });
-    ionicMaterialMotion.fadeSlideInRight({
-        selector: '.animate-fade-slide-in .item'
-    });
-    */
+    }
 
-
+/*
     $scope.selectedDate1;
     $scope.selectedDate2;
 
@@ -599,7 +558,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
       };
       ionicDatePicker.openDatePicker(ipObj1);
     }
-
+*/
 
 })
 
@@ -629,8 +588,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 
 
-.controller('LogrosCtrl', function($scope, $stateParams, $timeout, 
-                                        ionicMaterialInk, ionicMaterialMotion) {
+.controller('LogrosCtrl', function(
+    $scope, $http, $window, API, NotifyService, $ionicLoading ) {
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -638,47 +597,207 @@ angular.module('starter.controllers', ['ionic-datepicker'])
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
 
-    // Activate ink for controller
-    /*
-    ionicMaterialInk.displayEffect();
+    $scope.suficientesDatos = false;
+    $scope.currentDate  = new Date();
+    $scope.Year  = $scope.currentDate.getFullYear();
+    $scope.Month = $scope.currentDate.getMonth();
+    $scope.Day   = $scope.currentDate.getDay();
 
-    ionicMaterialMotion.pushDown({
-        selector: '.push-down'
-    });
-    ionicMaterialMotion.fadeSlideInRight({
-        selector: '.animate-fade-slide-in .item'
-    });
-    */
-    $scope.calificaciones = [
-        {
-          id: "001", 
-          materia: "Matemáticas",
-          deberes: '10/10',
-          lecciones: '25/30',
-          examen: '50/60'
-        },
-        {
-          id: "002", 
-          materia: "Lenguaje",
-          deberes: '15/20',
-          lecciones: '20/30',
-          examen: '46/50'
-        },
-        {
-          id: "003", 
-          materia: "Ciencias Naturales",
-          deberes: '7/10',
-          lecciones: '30/30',
-          examen: '58/60'
-        },
-        {
-          id: "004", 
-          materia: "Música Contemporánea",
-          deberes: '10/10',
-          lecciones: '30/10',
-          examen: '60/60'
-        }
+    $scope.formularioEC = {};
+    $scope.datosArray = [];
+    $scope.parametros = [];
+
+    $scope.init = function(){
+      $scope.getDatosPaciente();
+    }
+
+    $scope.getDatosPaciente = function () {
+      // Animation
+      $ionicLoading.show({
+          template: '<ion-spinner icon="circles"></ion-spinner> <h4>Guardando...</h4>',
+          animation: 'fade-in',
+          showBackdrop: true,
+          maxWidth: 500,
+          showDelay: 0
+      });
+
+      var url = API.url + '/datosControlPaciente';
+      $http({
+        method: 'GET',
+        url: url
+      })
+      .then(
+        function(response){
+          var datosPaciente = response.data;
+          var listaParametros = [];
+          
+          if ( datosPaciente.length < 2 ) {
+            $scope.suficientesDatos = false;
+          } 
+          else {
+            $scope.suficientesDatos = true;
+            for (var i = 0; i < datosPaciente.length; i++) {
+              var datosArr = datosPaciente[i].datos;
+              var fecha = datosPaciente[i].fechaDato;
+              for (var j = 0; j < datosArr.length; j++) {
+                var nombreDC = datosArr[j].nombreDato;
+                var valorDC = datosArr[j].valorDato;
+                var elem = {
+                  "fecha": fecha,
+                  "nombre": nombreDC,
+                  "valor": valorDC
+                }
+                // Si el parametro no está en lista, se añade
+                if( listaParametros.indexOf( nombreDC ) < 0 ){
+                  listaParametros.push( nombreDC );
+                }
+                $scope.datosArray.push(elem);
+              }
+            }
+            // Lista de string -> lista de objects
+            for ( var z=0; z<listaParametros.length ; z++ ){
+              var par = {
+                "value": listaParametros[z],
+                "label": listaParametros[z]
+              }
+              $scope.parametros.push(par);
+            }
+            $scope.formularioEC = {};
+            $scope.formularioEC.tipo = "Barras";
+            $scope.formularioEC.parametro = $scope.parametros[0].value;
+            // Fechas del formulario 
+            $scope.formularioEC.inicio = new Date($scope.Year,  0,  1);
+            $scope.formularioEC.fin    = new Date($scope.Year, 11, 31);
+
+            $ionicLoading.hide();
+          } // else ( >= 2 )
+        }, 
+        function(errorResponse){
+          $scope.suficientesDatos = false;
+          // Fechas del formulario 
+          $scope.formularioEC.inicio = new Date($scope.Year,  0,  1);
+          $scope.formularioEC.fin    = new Date($scope.Year, 11, 31);
+          $scope.formularioEC.tipo = "Barras";
+          var defaultErrType = errorResponse.data.type || "danger";
+          var defaultErrMessage = errorResponse.data.message || "Ha ocurrido un error y no se pudo obtener sus logros";
+
+          $ionicLoading.hide();
+          NotifyService.notify(defaultErrMessage,4000);
+        } // errorResponse
+      );
+    }
+
+    $scope.resetChart = function(){
+        $scope.series = [ "Año" ];
+        $scope.data = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+        $scope.unidadGrafico = "";
+    }
+
+    // ===================================
+    //   Variables del chart 
+    // =================================== 
+    $scope.unidadGrafico = "";
+    $scope.series = [ "Año" ];
+    $scope.labels = [
+      'Ene', 'Feb', 'Mar', 'Abr', 
+      'May', 'Jun', 'Jul', 'Ago',
+      'Sep', 'Oct', 'Nov', 'Dic'
     ];
+
+    // Fake data
+    $scope.data = [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+    $scope.lineOptions = {
+      legend: { display: true },
+      scales: {
+        xAxes: [
+          { ticks: { maxRotation: 0, minRotation: 0 } }
+        ],
+        yAxes: [{ 
+          type: 'linear', 
+          display: true, 
+          position: 'left', 
+          ticks: { beginAtZero: true } 
+        }]
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            var allData = data.datasets[tooltipItem.datasetIndex].data;
+            var tooltipLabel = data.labels[tooltipItem.index];
+            var tooltipData = allData[tooltipItem.index];
+            var unidad = $scope.unidadGrafico;
+            return tooltipLabel + ': ' + tooltipData + ' ' + unidad; 
+          }
+        }
+      }
+    };
+    $scope.barOptions = {
+      legend: { display: true },
+      scales: {
+        xAxes: [
+          { ticks: { maxRotation: 0, minRotation: 0 } }
+        ],
+        yAxes: [
+          { 
+            type: 'linear', display: true, position: 'left', 
+            ticks: { beginAtZero: true }, 
+            stacked: true 
+          }
+        ]
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            var allData = data.datasets[tooltipItem.datasetIndex].data;
+            var tooltipLabel = data.labels[tooltipItem.index];
+            var tooltipData = allData[tooltipItem.index];
+            var unidad = $scope.unidadGrafico;
+            return tooltipLabel + ': ' + tooltipData + ' ' + unidad; 
+          }
+        }
+      }
+    };
+    // ===================================
+
+    $scope.submit = function(){
+      //console.log($scope.formularioEC.tipo);
+      var url = API.url + '/datosControlPacienteRango';
+      var dataToSend = {
+        'inicio': $scope.formularioEC.inicio, 
+        'fin': $scope.formularioEC.fin, 
+        'parametro': $scope.formularioEC.parametro 
+      };
+      $http({
+        method: 'POST',
+        url: url,
+        data: dataToSend
+      })
+      .then(
+        function(response){
+          if ($scope.formularioEC.tipo = 'Lineas') { $scope.lineas = true; $scope.barras = false; }
+          if ($scope.formularioEC.tipo = 'Barras') { $scope.lineas = false; $scope.barras = true; }
+          $scope.series = response.data.series;
+          $scope.data = response.data.data;
+          $scope.unidadGrafico = response.data.unidad;
+        }, 
+        function(errorResponse){
+          if ($scope.formularioEC.tipo = 'Líneas') { $scope.lineas = true; $scope.barras = false; }
+          if ($scope.formularioEC.tipo = 'Barras') { $scope.lineas = false; $scope.barras = true; }
+          $scope.series = ["Año"];
+          $scope.data = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          ];
+          $scope.unidadGrafico = "";
+          var defaultErrType = errorResponse.data.type || "danger";
+          var defaultErrMessage = errorResponse.data.message || "Ha ocurrido un error y no se pudo obtener sus logros";
+          NotifyService.notify(defaultErrMessage,4000);
+        }
+      );
+    }
 
 })
 
