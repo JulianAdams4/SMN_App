@@ -1,9 +1,10 @@
 /* global angular, document, window */
 'use strict';
-angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
+angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.js'])
 
 .constant('API', {
-  url: 'http://apismn4movil.herokuapp.com/api'
+//  url: 'http://apismn4movil.herokuapp.com/api'
+  url: 'http://www.angiedelpezo.com/api'
 //  url: 'http://localhost:3000/api'
 })
 
@@ -276,7 +277,6 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
         .success(function (data) {
             var dataCentro = data[0];
             $scope.centro = dataCentro;
-            console.log(dataCentro);
         })
         .error(function (data) {
             NotifyService.notify('<h4>Ha ocurrido un error y no se pudo<br>obtener la informacion del centro</h4>',3000);
@@ -455,7 +455,9 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
     }
 
     $scope.submitProfile = function () {
+console.log("submit");
         if ( $rootScope.paciente && $rootScope.paciente.password && $rootScope.paciente.password.length<8 ) {
+console.log("Menor a 8");
           NotifyService.notify('<h4>La clave ingresada debe tener<br><b>al menos 8 caracteres</b></h4>',3000);
         }
         else {
@@ -478,10 +480,13 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
             })
             .error(function (data) {
                 var errMsg = data.message.split("</i>")[1];
+console.log(data.message);
                 var str = errMsg || 'Ha ocurrido un error<br>y no se pudo actualizar los datos';
-                str = '<h4>' + str + '</h4>';
+console.log(str);
+                var str2 = '<h4>' + str + '</h4>';
                 $ionicLoading.hide();
-                NotifyService.notify(str,4000);
+console.log(str2);
+                NotifyService.notify(str2,4000);
             });
         }
     }
