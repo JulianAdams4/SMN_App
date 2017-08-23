@@ -1,49 +1,41 @@
-<ion-view view-title="Datos de control" ng-init="init()">
+<ion-view view-title="Datos de control" ng-init="cargarDatosControl()">
     <ion-content ng-class="{expanded:isExpanded}">
-
         <div class="content" style="padding:20px;">
 
-            <div class="card animate-fade-slide-in-right">
-                <div class="item item-text-wrap" style="padding:0px;">
+            <div class="text-center" style="padding:3% 3%;">
+              <p style="margin:0px;"> Encuentre en esta secci&oacute;n sus <strong>datos de control</strong> y las <strong>fotos</strong> de su seguimiento </p>
+            </div>
 
-                    <div class="item item-text-wrap">
+            <div class="list card" ng-repeat="datoControl in datosControl">
 
-                        <h2 class="text-center" style="margin-top:9px; margin-bottom:12px;"> 
-                            <!-- <strong> {{viewData.titulo}} </strong> -->
-                            <strong> Mis datos de control </strong> 
-                        </h2>
-                        <hr>
-                        
-                        <h2> <strong>Peso:</strong> </h2>
-                        <div style="padding-left:15px;">
-                            <h2 class="text-justify"> 180 Kg </h2>
-                        </div>
-                        <br>
-
-                        <h2> <strong>Altura:</strong> </h2>
-                        <div style="padding-left:15px;">
-                            <h2 class="text-justify"> 170 cm </h2>
-                        </div>
-                        <br>
-
-                        <h2> <strong>IMC:</strong> </h2>
-                        <div style="padding-left:15px;">
-                            <h2 class="text-justify"> 0.25 </h2>
-                        </div>
-                        <br>
-
-                        <h2> <strong>Porcentaje de grasa:</strong> </h2>
-                        <div style="padding-left:15px;">
-                            <h2 class="text-justify"> 25 % </h2>
-                        </div>
-                        <br>
-
-                    </div>
-
+              <div class="item item-divider theme-color-app">
+                <div class="text-center">
+                  <h2 style="font-size:1.2em; padding-top:10px;color:#fff">
+                    <strong>Fecha:</strong> &nbsp;&nbsp;&nbsp;{{ datoControl.fechaDato | date:'dd/MM/yyyy' }}
+                  </h2>
                 </div>
+              </div>
+
+              <div class="item item-body">
+                <img class="full-image" src="img/segui.jpg" style="width:100%">
+                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                  <table class="table">
+                    <thead class="text-primary">
+                      <th>Dato</th>
+                      <th>Medida</th>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="dato in datoControl.datos">
+                        <td>{{dato.nombreDato}}</td>
+                        <td>{{dato.valorDato}}{{dato.unidadDato}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
             </div>
 
         </div>
-
     </ion-content>
 </ion-view>

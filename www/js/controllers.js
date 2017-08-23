@@ -263,7 +263,7 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     // Sin boton atrás
-    $ionicNavBarDelegate.showBackButton(false);
+    $ionicNavBarDelegate.showBackButton(true);
     // Que la navbar no se expanda
     $scope.$parent.setExpanded(false);
     // Sin fabContent
@@ -276,7 +276,7 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
         .success(function (data) {
             var dataCentro = data[0];
             $scope.centro = dataCentro;
-            //console.log(dataCentro);
+            console.log(dataCentro);
         })
         .error(function (data) {
             NotifyService.notify('<h4>Ha ocurrido un error y no se pudo<br>obtener la informacion del centro</h4>',3000);
@@ -289,21 +289,29 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
 
 .controller('ControlCtrl', function(
     ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, $scope, $stateParams, $timeout, 
-    $window) {
+    $window, $http, NotifyService, API ) {
 
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     // Boton atrás
-    $ionicNavBarDelegate.showBackButton(false);
+    $ionicNavBarDelegate.showBackButton(true);
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
     
     // Cargar datos
-    $scope.init = function () {
-        $scope.viewData = {}
-
+    $scope.cargarDatosControl = function(){
+      $http({
+        method: 'GET',
+        url: API.url + '/datosControlPaciente'
+      })
+      .then(function(response){
+        $scope.datosControl = response.data;
+      }, function(errorResponse){
+        var str = errorResponse.data.message || 'Ha ocurrido un error y no se pudo<br>obtener los datos de control';
+        NotifyService.notify('<h4>'+str+'</h4>',3000);
+      });
     }
 
     $scope.marcarTarea = function () {
@@ -535,13 +543,14 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
 
 .controller('PlanCtrl', function(
     $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, ionicDatePicker, API, 
-    $http ) {
+    $http, $ionicNavBarDelegate ) {
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
+    $ionicNavBarDelegate.showBackButton(true);
 
     $scope.descargarPlanVigente = function () {
       var url = API.url + '/planNutricionalPacienteVigente';

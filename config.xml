@@ -4,8 +4,8 @@
     <description>
         Aplicacion movil para el Sistema de manejo nutricional
     </description>
-    <author email="jadams@espol.edu.ec" href="#">
-      Julián Adams, Joyce Benitez, Stalyn Gonzabay y Verónica Moreira
+    <author>
+      Julián Adams Joyce Benitez Stalyn Gonzabay y Verónica Moreira
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -38,5 +38,5 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
-    <engine name="android" spec="^6.2.3" />
+    <engine name="android" spec="~6.2.3" />
 </widget>
