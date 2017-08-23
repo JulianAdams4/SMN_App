@@ -39,4 +39,9 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <engine name="android" spec="^6.2.3" />
+    <plugin name="cordova-plugin-device" />
+    <plugin name="cordova-plugin-splashscreen" />
+    <plugin name="cordova-plugin-statusbar" />
+    <plugin name="cordova-plugin-whitelist" />
+    <plugin name="ionic-plugin-keyboard" />
 </widget>
