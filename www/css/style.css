@@ -45,12 +45,8 @@ ion-spinner * {
 }
 
 .menu .avatar-pf {
-    margin: 0 auto;
-    width: 60%;
-    background: url('../img/logoSMN.jpg'); 
-    background-size: 100% 100%; 
-    margin-top:16px;
-    margin-bottom: 16px;
+    width: 100%;
+    background-size: 100% 100%;
 }
 
 .menu.menu-left * {
@@ -167,14 +163,14 @@ ion-spinner * {
   transform: scale(1.1);
 }
 
-input[type=text], 
-input[type=email] {
+#formPerfil label input[type=text], 
+#formPerfil label input[type=email] {
   border: 0;
   width: calc(100% - 2px);
   margin-left:1px;
 }
-input[type=text]:focus, 
-input[type=email]:focus {
+#formPerfil label input[type=text]:focus, 
+#formPerfil label input[type=email]:focus {
   outline: none;
   border-bottom: 2px solid #f2aa00;
 }

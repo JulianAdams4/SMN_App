@@ -257,7 +257,7 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
 
 .controller('CentrosCtrl', function(
     $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, 
-    CentroService ) {
+    CentroService, NotifyService ) {
 
     // Set Header
     $scope.$parent.showHeader();
@@ -272,15 +272,14 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
     $scope.centro = {};
 
     $scope.init = function () {
-        
         CentroService.allCentros()
         .success(function (data) {
             var dataCentro = data[0];
             $scope.centro = dataCentro;
-            console.log(dataCentro);
+            //console.log(dataCentro);
         })
         .error(function (data) {
-            console.log(data);
+            NotifyService.notify('<h4>Ha ocurrido un error y no se pudo<br>obtener la informacion del centro</h4>',3000);
         })
     }
 
@@ -340,6 +339,7 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
     $scope.info.Sexo = "";
     $scope.info.Email = "";
     $scope.paciente = {}
+    $scope.isText = true;
 
     function formatDate(date) {
         var monthNames = [
@@ -354,7 +354,59 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
     }
 
 
+    $scope.changeType = function () {
+        if ( $scope.isText == true ) {
+            $scope.isText = false;
+        }
+        if ( $scope.isText == false ) {
+            $scope.isText = true;
+        }
+        console.log("Changed");
+    }
+
     $scope.getDatosPaciente = function () {
+        $ionicNavBarDelegate.showBackButton(false);
+        // Animation
+        $ionicLoading.show({
+            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 500,
+            showDelay: 0
+        });
+
+        PacienteService.getDatos()
+        .success(function (data) {
+            $scope.noUserData = false;
+            $scope.nombreChild = data.nombres.split(" ")[0] + ' ' + data.apellidos.split(" ")[0];
+            $scope.info.NombresApellidos = data.nombres + ' ' + data.apellidos;
+            data.fechaNacimiento = new Date(data.fechaNacimiento);
+            $scope.info.fechaNacimiento = formatDate(data.fechaNacimiento);
+            $scope.info.Cedula = data.cedula;
+            $scope.info.Sexo = data.sexo;
+            $scope.info.Email = data.email;
+            $scope.paciente = data;
+            $rootScope.paciente = $scope.paciente;
+
+            $ionicLoading.hide();
+        })
+        .error(function (data) {
+            $scope.noUserData = true;
+            $scope.nombreChild = 'Bienvenido, usuario';
+            $scope.info.NombresApellidos = 'None';
+            $scope.info.Cedula = '0900000000';
+            var today = new Date();
+            $scope.info.fechaNacimiento = formatDate(today);
+            $scope.info.Sexo = 'Masculino';
+            $scope.info.Email = 'none@gmail.com';
+
+            $ionicLoading.hide();
+            NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo obtener los datos</h4>',3000);
+        });
+    }
+
+    $scope.getDatosPacienteEdit = function () {
+        $ionicNavBarDelegate.showBackButton(true);
         // Animation
         $ionicLoading.show({
             template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
@@ -395,30 +447,35 @@ angular.module('starter.controllers', ['ionic-datepicker', 'chart.js'])
     }
 
     $scope.submitProfile = function () {
-        // Animation
-        $ionicLoading.show({
-            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Guardando...</h4>',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 500,
-            showDelay: 0
-        });
+        if ( $rootScope.paciente && $rootScope.paciente.password && $rootScope.paciente.password.length<8 ) {
+          NotifyService.notify('<h4>La clave ingresada debe tener<br><b>al menos 8 caracteres</b></h4>',3000);
+        }
+        else {
+            // Animation
+            $ionicLoading.show({
+                template: '<ion-spinner icon="circles"></ion-spinner> <h4>Guardando...</h4>',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 500,
+                showDelay: 0
+            });
 
-        PacienteService.editarPaciente($rootScope.paciente)
-        .success(function (data) {
-            $ionicLoading.hide();
-            NotifyService.notify('<h4>Se ha actualizado la información<br>de su perfil exitosamente</h4>',3000);
-            $timeout(function() {
-                $window.location.href = '#/paciente/profile';
-            },3000);
-        })
-        .error(function (data) {
-            var errMsg = data.message.split("</i>")[1];
-            var str = errMsg || 'Ha ocurrido un error<br>y no se pudo actualizar los datos';
-            str = '<h4>' + str + '</h4>';
-            $ionicLoading.hide();
-            NotifyService.notify(str,4000);
-        });
+            PacienteService.editarPaciente($rootScope.paciente)
+            .success(function (data) {
+                $ionicLoading.hide();
+                NotifyService.notify('<h4>Se ha actualizado la información<br>de su perfil exitosamente</h4>',3000);
+                $timeout(function() {
+                    $window.location.href = '#/paciente/profile';
+                },3000);
+            })
+            .error(function (data) {
+                var errMsg = data.message.split("</i>")[1];
+                var str = errMsg || 'Ha ocurrido un error<br>y no se pudo actualizar los datos';
+                str = '<h4>' + str + '</h4>';
+                $ionicLoading.hide();
+                NotifyService.notify(str,4000);
+            });
+        }
     }
 
 })

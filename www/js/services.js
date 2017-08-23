@@ -41,8 +41,8 @@ angular.module('starter.services', [])
     }
 
     return {
-        loginUser: function(correo, clave) {
-            var myobject = { email: correo, password: clave };
+        loginUser: function( user, clave) {
+            var myobject = { cedula: user, password: clave };
             // Cast function
             Object.toparams = function ObjecttoParams(obj) {
                 var p = [];
