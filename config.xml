@@ -38,6 +38,7 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
+    <preference name="SplashShowOnlyFirstTime" value="false" />
     <engine name="android" spec="^6.2.3" />
     <plugin name="cordova-plugin-device" />
     <plugin name="cordova-plugin-splashscreen" />
