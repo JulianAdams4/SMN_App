@@ -39,8 +39,10 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <preference name="SplashShowOnlyFirstTime" value="false" />
+    <allow-navigation href="http://192.168.0.103:8100" />
     <engine name="android" spec="^6.2.3" />
     <plugin name="cordova-plugin-device" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.6.3" />
     <plugin name="cordova-plugin-splashscreen" />
     <plugin name="cordova-plugin-statusbar" />
     <plugin name="cordova-plugin-whitelist" />

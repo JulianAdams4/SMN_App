@@ -2,34 +2,12 @@
 'use strict';
 angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.js'])
 
+
 .constant('API', {
 //  url: 'http://apismn4movil.herokuapp.com/api'
   url: 'http://www.angiedelpezo.com/api'
 //  url: 'http://localhost:3000/api'
 })
-
-/*
-.config(function (ionicDatePickerProvider) {
-    var datePickerObj = {
-      inputDate: new Date(),
-      titleLabel: 'Selecciona un dia',
-      setLabel: 'SI',
-      todayLabel: 'Hoy',
-      closeLabel: 'X',
-      mondayFirst: false,
-      weeksList: ["D", "L", "M", "M", "J", "V", "S"],
-      monthsList: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-      templateType: 'popup',
-      from: new Date(2010, 1, 1),
-      to: new Date(2018, 12, 31),
-      showTodayButton: false,
-      dateFormat: 'dd MMMM yyyy',
-      closeOnSelect: false,
-      disableWeekdays: []
-    };
-    ionicDatePickerProvider.configDatePicker(datePickerObj);
-})
-*/
 
 
 .controller('AppCtrl', function(
@@ -549,8 +527,8 @@ console.log(str2);
 
 
 .controller('PlanCtrl', function(
-    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, ionicDatePicker, API, 
-    $http, $ionicNavBarDelegate, InvoiceService, $ionicModal, $sce ) {
+    $scope, $stateParams, $timeout, API, $http, $ionicNavBarDelegate, InvoiceService, $ionicModal, 
+    $sce, NotifyService, $cordovaFileTransfer ) {
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -558,114 +536,134 @@ console.log(str2);
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
     $ionicNavBarDelegate.showBackButton(true);
+    setDefaultsForPdfViewer($scope);
+    $scope.modal;
+    $scope.pdfurl = '';
+
+    $scope.cargarPlanNutricional = function(){
+        $scope.initModal();
+        $http({
+            method: 'GET',
+            url: API.url + '/planNutricionalPacienteVigente'
+        })
+        .then(
+          function(response){
+            if ( response.data && response.data.length > 0 ) {
+                var documentoUrl = response.data[0].documento;
+                $scope.pdfUrl = documentoUrl;
+                NotifyService.notify($scope.pdfUrl,2000);
+                console.log($scope.pdfUrl);
+            }            
+          }, 
+          function(errorResponse){
+            var defaultErrMessage = errorResponse.data.message || "Ha ocurrido un error y no se <br> pudo obtener su plan nutricional";
+            NotifyService.notify(defaultErrMessage,4000);
+        });
+    }
+
+    $scope.initModal = function (){    
+        // Initialize the modal view.
+        $ionicModal.fromTemplateUrl('pdf-viewer.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (modal) {
+            $scope.modal = modal;
+        });
+    }
+
+    // Clean up the modal view.
+    $scope.$on('$destroy', function () {
+        $scope.modal.remove();
+    });
+
+    $scope.mostrarModal = function () {
+        $scope.modal.show();
+    }
+
+    $scope.cerrarModal = function () {
+        $scope.modal.hide();
+    }
+
+    $scope.createInvoice = function () {
+        $scope.mostrarModal();
+        /*InvoiceService.createPdf(invoice)
+        .then(function(pdf) {
+            var blob = new Blob([pdf], {type: 'application/pdf'});
+            $scope.pdfUrl = URL.createObjectURL(blob);
+            // Display the modal view
+            //vm.modal.show();
+        });
+        */
+    };
 
     $scope.trustSrc = function(src) {
       return $sce.trustAsResourceUrl(src);
     }
 
+    function setDefaultsForPdfViewer($scope) {  
+        $scope.scroll = 0;
+        $scope.loading = 'loading';
+
+        $scope.onError = function (error) {
+            console.error(error);
+        };
+
+        $scope.onLoad = function () {
+            $scope.loading = '';
+        };
+
+        $scope.onProgress = function (progress) {
+            //console.log(progress);
+        };
+    }
 
     $scope.descargarPlanVigente = function () {
-      var url = API.url + '/planNutricionalPacienteVigente';
-      $http({
-        method: 'GET', url: url, data: {}
-      })
-      .then(
-        function(response){
-          console.log()
+        //var url = $scope.pdfUrl;
+        var url = "http://res.cloudinary.com/dsqpicprf/image/upload/v1503451912/avytiq9ab3ti7ghvhp6d.pdf";
+        var fileName = "PlanNutricional.pdf"
+        var targetPath = cordova.file.externalRootDirectory + '/Download/' + fileName;
+        var trustHosts = true;
+        var options = {};
 
-          $scope.pdfurl = response.data[0].documento;
-          $scope.readyPdf = true;
-          //window.open(response.data[0].documento , '_blank', 'location=no');
-        }, 
-        function(errorResponse){
-          var defaultErrMessage = errorResponse.data.message || "Ha ocurrido un error <br> y no se pudo obtener sus logros";
-          NotifyService.notify(defaultErrMessage,4000);
+        if ( url != "" ) {
+            NotifyService.notify('Descargando...', 2000);
+
+            $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
+            .then(
+              function(result) {
+                // Descargado con exito
+                $timeout(function(){
+                    var msj = "<b>¡Se ha descargado su plan nutricional!</b><br>Reviselo en la carpeta de <b>Descargas</b>"
+                    NotifyService.notify(msj, 4000);
+                },2000);
+              }, 
+              function(err) {
+                $timeout(function(){
+                    var msj = "Ocurrió un <b>error</b> durante la descarga<br>No se ha podido descargar el plan";
+                    NotifyService.notify(msj, 4000);
+                },2000);
+              }, 
+              function (progress) {
+                $timeout(function(){
+                  $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+                });
+              }
+            );
         }
-      );
-
-    }
-
-    $scope.pdfurl = '';
-    $scope.readyPdf = false;
-
-    $scope.cargarPlanNutricional = function(){
-      $http({
-        method: 'GET',
-        url: API.url + '/planNutricionalPacienteVigente'
-      })
-      .then(function(response){
-        $scope.planNutricional = response.data;
-        $scope.url = response.data.documento;
-        $scope.pdfurl = response.data.documento;
-      }, function(errorResponse){
-        demo.mostrarNotificacion(errorResponse.data.type, errorResponse.data.message);
-      })
-
+        else {
+            var msj = 'Plan nutricional no disponible';
+            NotifyService.notify(msj, 4000);
+        }
     }
 
 
-/*
-    $scope.selectedDate1;
-    $scope.selectedDate2;
-
-    var ipObj1 = {
-      callback: function (val) {  //Mandatory
-        console.log('Return value from the datepicker popup is :\n-> ', new Date(val));
-      },
-      titleLabel: 'Selecciona un dia',
-      setLabel: 'Fijar',
-      todayLabel: 'Hoy',
-      closeLabel: 'Cerrar',
-      disabledDates: [],
-      from: new Date(2010, 1, 1), //Optional
-      to: new Date(2020, 12, 31), //Optional
-      inputDate: new Date(),      //Optional
-      mondayFirst: true,          //Optional
-      disableWeekdays: [],       //Optional
-      closeOnSelect: false,       //Optional
-      templateType: 'popup'       //Optional
-    };
-
-    $scope.abrirCalendarioPopup = function(){
-      ionicDatePicker.openDatePicker(ipObj1);
-    };
-
-    // ------------------------------
-
-    $scope.$on('$viewContentLoaded', function() {
-        $scope.abrirCalendarioModal();
-    });
-
-    $scope.abrirCalendarioModal = function (val) {
-      var ipObj1 = {
-        callback: function (val) {  //Mandatory
-          console.log('Return value from the datepicker modal is:\n -> ', new Date(val));
-          $scope.selectedDate2 = new Date(val);
-        },
-        disabledDates: [],
-        titleLabel: 'Selecciona un dia',
-        setLabel: 'Fijar',
-        todayLabel: 'Hoy',
-        closeLabel: 'Cerrar',
-        from: new Date(2010, 1, 1),
-        to: new Date(2020, 12, 31),
-        inputDate: new Date(),
-        mondayFirst: false, 
-        disableWeekdays: [],
-        showTodayButton: true,
-        closeOnSelect: false,
-        templateType: 'modal'
-      };
-      ionicDatePicker.openDatePicker(ipObj1);
-    }
-*/
 
 })
 
 
 
-.controller('CitasCtrl', function($scope, $stateParams, $timeout, 
-                                        ionicMaterialInk, ionicMaterialMotion, ionicDatePicker) {
+.controller('CitasCtrl', function(
+    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, ionicDatePicker ){
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
