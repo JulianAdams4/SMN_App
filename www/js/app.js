@@ -4,8 +4,10 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-material'])
 
+var dependencies = ['ionic', 'starter.controllers', 'starter.services', 'ionic-material', 'pdf'];
+
+angular.module('starter', dependencies)
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -43,6 +45,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   
   /*////////////////////
       Login 
+      ConnectivityMonitor.startWatching();
   ////////////////////*/
   .state('app.login', {
     url: '/login',
@@ -50,7 +53,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       'menuContent': {
         templateUrl: 'templates/login/login.html',
         controller: 'LoginCtrl'
-      }
+      },
+      'fabContent': { templateUrl: '', controller: '' }
     }
   })
   
@@ -80,7 +84,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       'menuContent': {
         templateUrl: 'templates/paciente/profileChild.html',
         controller: 'ProfileCtrl'
-      }
+      },
+      'fabContent': { templateUrl: '', controller: '' }
     }
   })
 
@@ -112,7 +117,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
      'menuContent': {
         templateUrl: 'templates/paciente/centro.html',
         controller: 'CentrosCtrl'
-      }
+      },
+      'fabContent': { templateUrl: '', controller: '' }
     }
   })
   
@@ -126,7 +132,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       'menuContent': {
         templateUrl: 'templates/paciente/datosControl.html',
         controller: 'ControlCtrl'
-      }
+      },
+      'fabContent': { templateUrl: '', controller: '' }
     }
   })
 
@@ -140,7 +147,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       'menuContent': {
         templateUrl: 'templates/paciente/plan.html',
         controller: 'PlanCtrl'
-      }
+      },
+      'fabContent': { templateUrl: '', controller: '' }
     }
   })
 
@@ -154,7 +162,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       'menuContent': {
         templateUrl: 'templates/paciente/citas.html',
         controller: 'CitasCtrl'
-      }
+      },
+      'fabContent': { templateUrl: '', controller: '' }
     }
   })
 
@@ -168,7 +177,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       'menuContent': {
         templateUrl: 'templates/paciente/logros.html',
         controller: 'LogrosCtrl'
-      }
+      },
+      'fabContent': { templateUrl: '', controller: '' }
     }
   })
   ;

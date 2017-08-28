@@ -160,7 +160,9 @@ angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.j
 
 .controller('LoginCtrl', function(
     $scope, $timeout, $stateParams, ionicMaterialInk, $ionicModal, $ionicLoading, $ionicHistory, 
-    $state, $ionicPopup, $window, $rootScope, NotifyService, LoginService) {
+    $state, $ionicPopup, $window, $rootScope, NotifyService, LoginService, ConnectivityMonitor ) {
+
+    ConnectivityMonitor.startWatching();
 
     $scope.init = function () {
         if ( $scope.isSessionActive() ) {
@@ -548,7 +550,7 @@ console.log(str2);
 
 .controller('PlanCtrl', function(
     $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, ionicDatePicker, API, 
-    $http, $ionicNavBarDelegate ) {
+    $http, $ionicNavBarDelegate, InvoiceService, $ionicModal, $sce ) {
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -557,6 +559,11 @@ console.log(str2);
     $scope.$parent.setHeaderFab(false);
     $ionicNavBarDelegate.showBackButton(true);
 
+    $scope.trustSrc = function(src) {
+      return $sce.trustAsResourceUrl(src);
+    }
+
+
     $scope.descargarPlanVigente = function () {
       var url = API.url + '/planNutricionalPacienteVigente';
       $http({
@@ -564,8 +571,11 @@ console.log(str2);
       })
       .then(
         function(response){
-          console.log(response.data[0].documento)
-          window.open(response.data[0].documento , '_blank', 'location=no');
+          console.log()
+
+          $scope.pdfurl = response.data[0].documento;
+          $scope.readyPdf = true;
+          //window.open(response.data[0].documento , '_blank', 'location=no');
         }, 
         function(errorResponse){
           var defaultErrMessage = errorResponse.data.message || "Ha ocurrido un error <br> y no se pudo obtener sus logros";
@@ -574,6 +584,25 @@ console.log(str2);
       );
 
     }
+
+    $scope.pdfurl = '';
+    $scope.readyPdf = false;
+
+    $scope.cargarPlanNutricional = function(){
+      $http({
+        method: 'GET',
+        url: API.url + '/planNutricionalPacienteVigente'
+      })
+      .then(function(response){
+        $scope.planNutricional = response.data;
+        $scope.url = response.data.documento;
+        $scope.pdfurl = response.data.documento;
+      }, function(errorResponse){
+        demo.mostrarNotificacion(errorResponse.data.type, errorResponse.data.message);
+      })
+
+    }
+
 
 /*
     $scope.selectedDate1;

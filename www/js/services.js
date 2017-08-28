@@ -219,7 +219,7 @@ angular.module('starter.services', [])
     Factory que controla el estado
     de la conexion a internet persistentemente
 ////////////////////////////////////////////// */
-.factory('ConnectivityMonitor', function($rootScope, $cordovaNetwork, NotifyServ){
+.factory('ConnectivityMonitor', function( $rootScope, $cordovaNetwork, $ionicLoading, $window ){
 return {
     // Verifica si posee conexion
     isOnline: function(){
@@ -245,27 +245,81 @@ return {
     startWatching: function(){
         if(ionic.Platform.isWebView()){
             $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
-                //$rootScope.notify("<h4>Conexión establecida</h4>");
-                alert("Conexion restablecida");
+                $ionicLoading.show({
+                    template: "<h4>Conectado a internet</h4>", 
+                    animation: 'fade-in', showBackdrop: false, 
+                    maxWidth: 500, showDelay: 0
+                });
+                $window.setTimeout(function () {
+                    $ionicLoading.hide();
+                }, 3000);
             });
  
             $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
-                //$rootScope.notify("<h4>Se perdió la conexión<br>Verifique su conexión a internet</h4>");
-                alert("Se perdio la conexión");
+                $ionicLoading.show({
+                    template: "<h4>No estás conectado a internet</h4>", 
+                    animation: 'fade-in', showBackdrop: false, 
+                    maxWidth: 500, showDelay: 0
+                });
+                $window.setTimeout(function () {
+                    $ionicLoading.hide();
+                }, 3000);
             });
         }
         else {
             window.addEventListener("online", function(e) {
-                //$rootScope.notify("<h4>Conexión establecida</h4>");
-                alert("Conexion restablecida");
+                $ionicLoading.show({
+                    template: "<h4>Conectado a internet</h4>", 
+                    animation: 'fade-in', showBackdrop: false, 
+                    maxWidth: 500, showDelay: 0
+                });
+                $window.setTimeout(function () {
+                    $ionicLoading.hide();
+                }, 3000);
             }, false);    
- 
             window.addEventListener("offline", function(e) {
-                //$rootScope.notify("<h4>Se perdió la conexión<br>Verifique su conexión a internet</h4>");
-                alert("Se perdio la conexión");
+                $ionicLoading.show({
+                    template: "<h4>No estás conectado a internet</h4>", 
+                    animation: 'fade-in', showBackdrop: false, 
+                    maxWidth: 500, showDelay: 0
+                });
+                $window.setTimeout(function () {
+                    $ionicLoading.hide();
+                }, 3000);
             }, false);  
         }       
     }
 
 } // end return
+})
+
+
+/*////////////////////////
+    PDF 
+////////////////////////*/
+.factory('InvoiceService', function ($q) {
+    function base64ToUint8Array(base64) {  
+        var raw = atob(base64);
+        var uint8Array = new Uint8Array(raw.length);
+        for (var i = 0; i < raw.length; i++) {
+        uint8Array[i] = raw.charCodeAt(i);
+        }
+        return uint8Array;
+    }
+
+    function createPdf(invoice) {
+        return $q(function(resolve, reject) {
+            //var dd = createDocumentDefinition(invoice);
+            //var pdf = pdfMake.createPdf(dd);
+            var pdf = invoice;
+
+            pdf.getBase64(function (output) {
+                resolve(base64ToUint8Array(output));
+            });
+        });
+    }
+
+    return {
+        createPdf: createPdf
+    }
 });
