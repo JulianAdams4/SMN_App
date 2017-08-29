@@ -1,6 +1,7 @@
 /* global angular, document, window */
 'use strict';
-angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.js'])
+angular.module('starter.controllers', ['ngCordova', 'chart.js'])
+
 
 
 .constant('API', {
@@ -10,9 +11,23 @@ angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.j
 })
 
 
+/*
+.config(function($cordovaInAppBrowserProvider) {
+  var defaultOptions = {
+    location: 'no',
+    clearcache: 'no',
+    toolbar: 'no'
+  };
+  document.addEventListener("deviceready", function () {
+    $cordovaInAppBrowserProvider.setDefaultOptions(options)
+  }, false);
+})
+*/
+
+
 .controller('AppCtrl', function(
     $scope, $ionicModal, $ionicPopover, $timeout, $window, $ionicHistory, $state, $ionicLoading, 
-    LoginService, $rootScope) {
+    LoginService, $rootScope ) {
 
     // Color de la Status bar
     $scope.$on('$ionicView.beforeEnter', function() {
@@ -111,6 +126,12 @@ angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.j
             maxWidth: 500,
             showDelay: 0
         });
+        $ionicHistory.clearCache();
+        $ionicHistory.clearHistory();
+        $ionicHistory.nextViewOptions({
+            disableAnimate: false,
+            disableBack: true
+        });
         // Send time to hide animation
         LoginService.logOut(500);
     }
@@ -140,39 +161,21 @@ angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.j
     $scope, $timeout, $stateParams, ionicMaterialInk, $ionicModal, $ionicLoading, $ionicHistory, 
     $state, $ionicPopup, $window, $rootScope, NotifyService, LoginService, ConnectivityMonitor ) {
 
-    ConnectivityMonitor.startWatching();
-
     $scope.init = function () {
-        if ( $scope.isSessionActive() ) {
-            var str = $window.localStorage.getItem('rol');
+        ConnectivityMonitor.startWatching();
+
+        if ( LoginService.isSessionActive() ) {
+            var str = LoginService.getToken("rol");
             $state.go(str+'.profile',{});
         }
         else {
             $scope.loginData = {};
             $scope.loginData.loginUser="";
             $scope.loginData.loginPassword="";
-            $scope.rolLogin="";
         }
     }
 
     //ionicMaterialInk.displayEffect();
-
-    // Create the login modal that we will use later
-    $ionicModal.fromTemplateUrl('gbCaseEdit.html', {
-        scope: $scope
-    }).then(function(modal) {
-        $scope.errorModal = modal;
-    });
-
-    // Triggered in the login modal to close it
-    $scope.cerrarModalError = function() {
-        $scope.errorModal.hide();
-    };
-
-    // Open the login modal
-    $scope.mostrarModalError = function() {
-        $scope.errorModal.show();
-    };
 
     $scope.login = function () {
         // Campos vacios
@@ -182,7 +185,7 @@ angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.j
         else {
             // Animation
             $ionicLoading.show({
-                template: '<ion-spinner icon="circles"></ion-spinner> <h4>Autenticando</h4>',
+                template: '<ion-spinner icon="circles"></ion-spinner> <h4>Por favor, espere</h4>',
                 animation: 'fade-in',
                 showBackdrop: true,
                 maxWidth: 500,
@@ -198,9 +201,10 @@ angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.j
             .success(function (data) {
                 //console.log(data);
                 var ls = {
-                    sessionActive: true
+                    sessionActive: true,
+                    rol: 'paciente'
                 };
-                $rootScope.setToken(ls); // Se crea la "session"
+                LoginService.setToken(ls); // Se crea la "session"
                 // No back button
                 $ionicHistory.nextViewOptions({
                   disableAnimate: true,
@@ -214,7 +218,6 @@ angular.module('starter.controllers', ['ngCordova', 'ionic-datepicker', 'chart.j
                 //console.log(data);
                 $ionicLoading.hide();
                 NotifyService.notify('<h4>¡Usuario o contraseña incorrectos!<br>Por favor verifique las credenciales</h4>',3000);
-                $scope.loginData.loginPassword = "";
             });
         } // else empty
 
@@ -460,12 +463,9 @@ console.log("Menor a 8");
             })
             .error(function (data) {
                 var errMsg = data.message.split("</i>")[1];
-console.log(data.message);
                 var str = errMsg || 'Ha ocurrido un error<br>y no se pudo actualizar los datos';
-console.log(str);
                 var str2 = '<h4>' + str + '</h4>';
                 $ionicLoading.hide();
-console.log(str2);
                 NotifyService.notify(str2,4000);
             });
         }
@@ -474,33 +474,7 @@ console.log(str2);
 })
 
 
-
-.controller('EventosCtrl', function(
-    $scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicNavBarDelegate) {
-
-    // Set Header
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    // Sin boton atrás
-    $ionicNavBarDelegate.showBackButton(false);
-    // Que la navbar no se expanda
-    $scope.$parent.setExpanded(false);
-    // Sin fabContent
-    $scope.$parent.setHeaderFab(false);
-
-    $timeout(function() {
-        ionicMaterialMotion.fadeSlideIn({
-            selector: '.animate-fade-slide-in .item'
-        });
-    }, 200);
-
-    // Activate ink for controller
-    ionicMaterialInk.displayEffect();
-
-})
-
-
-
+/*
 .controller('AlertasCtrl', function($scope, $stateParams, $timeout, 
                                     ionicMaterialMotion, ionicMaterialInk, $ionicNavBarDelegate) {
     // Set Header
@@ -523,140 +497,219 @@ console.log(str2);
     ionicMaterialInk.displayEffect();
 
 })
-
+*/
 
 
 .controller('PlanCtrl', function(
-    $scope, $stateParams, $timeout, API, $http, $ionicNavBarDelegate, InvoiceService, $ionicModal, 
-    $sce, NotifyService, $cordovaFileTransfer ) {
+    $scope, $timeout, $http, $ionicNavBarDelegate, $ionicModal, $ionicLoading, 
+    $cordovaFileTransfer, $cordovaInAppBrowser, 
+    $sce, API, NotifyService, ConnectivityMonitor ) {
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
-    $ionicNavBarDelegate.showBackButton(true);
-    setDefaultsForPdfViewer($scope);
-    $scope.modal;
-    $scope.pdfurl = '';
+    $ionicNavBarDelegate.showBackButton(false);
+
+    $scope.disableButtons = false;
+    $scope.url = '';
 
     $scope.cargarPlanNutricional = function(){
-        $scope.initModal();
-        $http({
-            method: 'GET',
-            url: API.url + '/planNutricionalPacienteVigente'
-        })
-        .then(
-          function(response){
-            if ( response.data && response.data.length > 0 ) {
-                var documentoUrl = response.data[0].documento;
-                $scope.pdfUrl = documentoUrl;
-                NotifyService.notify($scope.pdfUrl,2000);
-                console.log($scope.pdfUrl);
-            }            
-          }, 
-          function(errorResponse){
-            var defaultErrMessage = errorResponse.data.message || "Ha ocurrido un error y no se <br> pudo obtener su plan nutricional";
-            NotifyService.notify(defaultErrMessage,4000);
-        });
+      // Animation
+      $ionicLoading.show({
+        template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 500,
+        showDelay: 0
+      });
+      // Get data
+      $http({
+        method: 'GET',
+        url: API.url + '/planNutricionalPacienteVigente'
+      })
+      .then(
+        function(response){
+          if ( response.data && response.data.length > 0 ) {
+            var documentoUrl = response.data[0].documento;
+            $scope.url = documentoUrl;
+            $ionicLoading.hide();
+            /*
+            // Obtenemos el documento PDF
+            $http({
+              method: 'GET',
+              url: $scope.url
+            })
+            .then(function (data) {
+                // PDF string here
+                $scope.pdfData = data;
+                $ionicLoading.hide();
+              },
+              function (err) {
+                var msj = "<h4>Ha ocurrido un error y no se <br> pudo obtener su plan nutricional</h4>";
+                $ionicLoading.hide();
+                NotifyService.notify(msj,4000);
+            });
+            */
+          }
+          else {
+            $scope.disableButtons = true;
+            var msj = "<h4>Plan nutricional no disponible</h4>";
+            $ionicLoading.hide();
+            NotifyService.notify(msj,4000);
+          }
+        }, 
+        function(errorResponse){
+          var defaultErrMessage = errorResponse.data.message || "Ha ocurrido un error y no se <br> pudo obtener su plan nutricional";
+          $ionicLoading.hide();
+          NotifyService.notify("<h4>"+defaultErrMessage+"</h4>",4000);
+      });
     }
-
+    /*
     $scope.initModal = function (){    
-        // Initialize the modal view.
-        $ionicModal.fromTemplateUrl('pdf-viewer.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        }).then(function (modal) {
-            $scope.modal = modal;
-        });
+      // Initialize the modal view.
+      $ionicModal.fromTemplateUrl('pdf-viewer.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        $scope.modal = modal;
+      });
     }
-
+    */
+    /*
     // Clean up the modal view.
     $scope.$on('$destroy', function () {
-        $scope.modal.remove();
+      $scope.modal.remove();
     });
 
     $scope.mostrarModal = function () {
-        $scope.modal.show();
+      $scope.modal.show();
     }
 
     $scope.cerrarModal = function () {
-        $scope.modal.hide();
+      $scope.modal.hide();
     }
+    */
 
-    $scope.createInvoice = function () {
-        $scope.mostrarModal();
-        /*InvoiceService.createPdf(invoice)
-        .then(function(pdf) {
-            var blob = new Blob([pdf], {type: 'application/pdf'});
-            $scope.pdfUrl = URL.createObjectURL(blob);
-            // Display the modal view
-            //vm.modal.show();
+    $scope.verPlanVigente = function () {
+      var closed = false;
+      // Animation
+      $ionicLoading.show({
+        template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
+        animation: 'fade-in',
+        showBackdrop: false,
+        maxWidth: 500,
+        showDelay: 0
+      });
+      var connected = ConnectivityMonitor.isOnline();
+      if ( !connected ) {
+        var msj = "<h4><b>Parece que no estás conectado a internet</b><br>Revise su conexión e intente de nuevo</h4>";
+        $ionicLoading.hide();
+        NotifyService.notify(msj, 4000);
+        return;
+      }
+      if ( connected && $scope.pdfurl!="" ) {
+        $ionicLoading.hide();
+        var options = {
+          location: 'yes',
+          clearcache: 'yes'
+        };
+        var type = "_system";
+        window.open($scope.pdfurl, type, 'location=yes'); return false;
+        /*
+        if (device.platform === "iOS") { type = "_blank"; }
+        else if (device.platform === "Android") { type = "_system"; }
+        else { ; }
+        */
+        /*
+        $cordovaInAppBrowser.open($scope.url, type, options)
+        .then(function (event) {
+          closed = true;
+          $ionicLoading.hide();
+          NotifyService.notify("Success", 3000);
+        })
+        .catch(function (event) {
+          closed = true;
+          $ionicLoading.hide();
+          NotifyService.notify("Error", 3000);
         });
         */
+      }
+      else {
+        var msj = "<h4><b>Ha ocurrido un error</b><br>No se pudo visualizar su plan nutricional</h4>";
+        closed = true;
+        $ionicLoading.hide();
+        NotifyService.notify(msj, 4000);
+      }
+      // Prevention
+      if ( closed == false ) { $ionicLoading.hide(); }
     };
-
+/*
     $scope.trustSrc = function(src) {
       return $sce.trustAsResourceUrl(src);
     }
 
     function setDefaultsForPdfViewer($scope) {  
-        $scope.scroll = 0;
-        $scope.loading = 'loading';
+      $scope.scroll = 0;
+      $scope.loading = 'loading';
 
-        $scope.onError = function (error) {
-            console.error(error);
-        };
+      $scope.onError = function (error) {
+         console.error(error);
+      };
 
-        $scope.onLoad = function () {
-            $scope.loading = '';
-        };
+      $scope.onLoad = function () {
+        $scope.loading = '';
+      };
 
-        $scope.onProgress = function (progress) {
-            //console.log(progress);
-        };
+      $scope.onProgress = function (progress) {
+        //console.log(progress);
+      };
     }
-
+*/
     $scope.descargarPlanVigente = function () {
-        //var url = $scope.pdfUrl;
-        var url = "http://res.cloudinary.com/dsqpicprf/image/upload/v1503451912/avytiq9ab3ti7ghvhp6d.pdf";
-        var fileName = "PlanNutricional.pdf"
-        var targetPath = cordova.file.externalRootDirectory + '/Download/' + fileName;
-        var trustHosts = true;
-        var options = {};
+      var url = $scope.url;
+      var fileName = "plan_nutricional.pdf"
+      var targetPath = cordova.file.externalRootDirectory + '/Download/' + fileName;
+      var trustHosts = true;
+      var options = {};
 
-        if ( url != "" ) {
-            NotifyService.notify('Descargando...', 2000);
-
-            $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
-            .then(
-              function(result) {
-                // Descargado con exito
-                $timeout(function(){
-                    var msj = "<b>¡Se ha descargado su plan nutricional!</b><br>Reviselo en la carpeta de <b>Descargas</b>"
-                    NotifyService.notify(msj, 4000);
-                },2000);
-              }, 
-              function(err) {
-                $timeout(function(){
-                    var msj = "Ocurrió un <b>error</b> durante la descarga<br>No se ha podido descargar el plan";
-                    NotifyService.notify(msj, 4000);
-                },2000);
-              }, 
-              function (progress) {
-                $timeout(function(){
-                  $scope.downloadProgress = (progress.loaded / progress.total) * 100;
-                });
-              }
-            );
-        }
-        else {
-            var msj = 'Plan nutricional no disponible';
+      if ( url != "" ) {
+        // Animation
+        $ionicLoading.show({
+          template: '<ion-spinner icon="circles"></ion-spinner> <h4>Descargando...</h4>',
+          animation: 'fade-in',
+          showBackdrop: false,
+          maxWidth: 500,
+          showDelay: 0
+        });
+        $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
+        .then(
+          function(result) {
+            // Descargado con exito
+            var msj = "<h4><b>¡Se ha descargado su plan nutricional!</b><br>Reviselo en la carpeta de <b>Descargas</b></h4>"
+            $ionicLoading.hide();
             NotifyService.notify(msj, 4000);
-        }
+          }, 
+          function(err) {
+            // Error
+            var msj = "<h4>Ocurrió un <b>error</b> durante la descarga<br>No se ha podido descargar el plan</h4>";
+            $ionicLoading.hide();
+            NotifyService.notify(msj, 4000);
+          }, 
+          function (progress) {
+            $timeout(function(){
+              $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+            });
+          }
+        );
+      }
+      else {
+        var msj = '<h4>Plan nutricional no disponible</h4>';
+        $ionicLoading.hide();
+        NotifyService.notify(msj, 4000);
+      }
     }
-
-
 
 })
 
@@ -898,55 +951,4 @@ console.log(str2);
     }
 
 })
-
-
-.controller('DetalleCalificacionCtrl', function($scope, $stateParams, $timeout, 
-                                        ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate) {
-
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    $scope.isExpanded = false;
-    $scope.$parent.setExpanded(false);
-    $scope.$parent.setHeaderFab(false);
-
-    // Activate ink for controller
-    /*
-    ionicMaterialInk.displayEffect();
-
-    ionicMaterialMotion.pushDown({
-        selector: '.push-down'
-    });
-    ionicMaterialMotion.fadeSlideInRight({
-        selector: '.animate-fade-slide-in .item'
-    });
-    */
-
-    // Cargar datos
-    $scope.init = function () {
-        // Boton atrás
-        $ionicNavBarDelegate.showBackButton(true);
-        var id = $stateParams.idCalif;
-        if ( id=="001" ) { $scope.name = "Matemáticas" }
-        if ( id=="002" ) { $scope.name = "Lenguaje" }
-        if ( id=="003" ) { $scope.name = "Ciencias Naturales" }
-        if ( id=="004" ) { $scope.name = "Música Contemporánea" }
-        $scope.viewData = {
-            id: "001", 
-            materia: $scope.name, 
-            total: '85/100', 
-            deberes: {
-                total: '10/10',
-                detalle: ['3/3', '4/4', '3/3']
-            }, 
-            lecciones: {
-                total: '25/30',
-                detalle: ['10/10', '5/10', '10/10']
-            }, 
-            examen: '50/60'
-        }
-        console.log($scope.viewData);
-    }
-
-})
-
 ;

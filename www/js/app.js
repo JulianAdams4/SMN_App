@@ -8,7 +8,7 @@
 var dependencies = ['ionic', 'starter.controllers', 'starter.services', 'ionic-material', 'pdf'];
 
 angular.module('starter', dependencies)
-.run(function($ionicPlatform) {
+.run(function( $ionicPlatform, $ionicHistory ) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -21,6 +21,20 @@ angular.module('starter', dependencies)
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    // To Conditionally Disable Back
+    $ionicPlatform.registerBackButtonAction(function(){
+      if( $ionicHistory.currentStateName === 'app.login' ){
+        event.preventDefault();
+      }
+      else if ( $ionicHistory.currentStateName === 'paciente.profile' ) {
+        event.preventDefault();
+      }
+      else{
+        $ionicHistory.goBack();
+      }
+    },100);
+
   });
 })
 

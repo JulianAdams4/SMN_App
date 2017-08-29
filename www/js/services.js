@@ -26,21 +26,26 @@ angular.module('starter.services', [])
 .service('LoginService', function( $ionicHistory, $ionicLoading, $rootScope, 
                                    $http, $window, API ){
 
-    $rootScope.setToken = function (tokens) {
-        for (var key in tokens){
-            $window.localStorage.setItem(key , encodeURIComponent(tokens[key]) );
-        }
-    }
-
-    $rootScope.getToken = function (value) {
-        return $window.localStorage.getItem(String(value));
-    }
-
-    $rootScope.isSessionActive = function () {
-        return $window.localStorage.id ? true : false;
-    }
-
     return {
+        setToken:  function (tokens) {
+          for (var key in tokens){
+            $window.localStorage.setItem(key , encodeURIComponent(tokens[key]) );
+          }
+        },
+
+
+        getToken: function (value) {
+          return $window.localStorage.getItem(String(value));    
+        },
+
+
+        isSessionActive: function () {
+          var a = $window.localStorage.rol;
+          var b = $window.localStorage.rol!=""; 
+          return (a && b) ? true : false;
+        },
+
+
         loginUser: function( user, clave) {
             var myobject = { cedula: user, password: clave };
             // Cast function
@@ -220,106 +225,106 @@ angular.module('starter.services', [])
     de la conexion a internet persistentemente
 ////////////////////////////////////////////// */
 .factory('ConnectivityMonitor', function( $rootScope, $cordovaNetwork, $ionicLoading, $window ){
-return {
-    // Verifica si posee conexion
-    isOnline: function(){
-        if(ionic.Platform.isWebView()){
-            return $cordovaNetwork.isOnline();    
-        } 
-        else {
-            return navigator.onLine;
-        }
-    },
+    return {
+        // Verifica si posee conexion
+        isOnline: function(){
+            if(ionic.Platform.isWebView()){
+                return $cordovaNetwork.isOnline();    
+            } 
+            else {
+                return navigator.onLine;
+            }
+        },
 
-    // Verifica si no posee conexion
-    isOffline: function(){
-        if(ionic.Platform.isWebView()){
-            return !$cordovaNetwork.isOnline();    
-        } 
-        else {
-            return !navigator.onLine;
-        }
-    },
+        // Verifica si no posee conexion
+        isOffline: function(){
+            if(ionic.Platform.isWebView()){
+                return !$cordovaNetwork.isOnline();    
+            } 
+            else {
+                return !navigator.onLine;
+            }
+        },
 
-    // Monitorea la conexion a internet
-    startWatching: function(){
-        if(ionic.Platform.isWebView()){
-            $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
-                $ionicLoading.show({
-                    template: "<h4>Conectado a internet</h4>", 
-                    animation: 'fade-in', showBackdrop: false, 
-                    maxWidth: 500, showDelay: 0
+        // Monitorea la conexion a internet
+        startWatching: function(){
+            if(ionic.Platform.isWebView()){
+                $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+                    $ionicLoading.show({
+                        template: "<h4>Conectado a internet</h4>", 
+                        animation: 'fade-in', showBackdrop: false, 
+                        maxWidth: 500, showDelay: 0
+                    });
+                    $window.setTimeout(function () {
+                        $ionicLoading.hide();
+                    }, 3000);
                 });
-                $window.setTimeout(function () {
-                    $ionicLoading.hide();
-                }, 3000);
-            });
- 
-            $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
-                $ionicLoading.show({
-                    template: "<h4>No estás conectado a internet</h4>", 
-                    animation: 'fade-in', showBackdrop: false, 
-                    maxWidth: 500, showDelay: 0
+     
+                $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+                    $ionicLoading.show({
+                        template: "<h4>No estás conectado a internet</h4>", 
+                        animation: 'fade-in', showBackdrop: false, 
+                        maxWidth: 500, showDelay: 0
+                    });
+                    $window.setTimeout(function () {
+                        $ionicLoading.hide();
+                    }, 3000);
                 });
-                $window.setTimeout(function () {
-                    $ionicLoading.hide();
-                }, 3000);
-            });
+            }
+            else {
+                window.addEventListener("online", function(e) {
+                    $ionicLoading.show({
+                        template: "<h4>Conectado a internet</h4>", 
+                        animation: 'fade-in', showBackdrop: false, 
+                        maxWidth: 500, showDelay: 0
+                    });
+                    $window.setTimeout(function () {
+                        $ionicLoading.hide();
+                    }, 3000);
+                }, false);    
+                window.addEventListener("offline", function(e) {
+                    $ionicLoading.show({
+                        template: "<h4>No estás conectado a internet</h4>", 
+                        animation: 'fade-in', showBackdrop: false, 
+                        maxWidth: 500, showDelay: 0
+                    });
+                    $window.setTimeout(function () {
+                        $ionicLoading.hide();
+                    }, 3000);
+                }, false);  
+            }       
         }
-        else {
-            window.addEventListener("online", function(e) {
-                $ionicLoading.show({
-                    template: "<h4>Conectado a internet</h4>", 
-                    animation: 'fade-in', showBackdrop: false, 
-                    maxWidth: 500, showDelay: 0
-                });
-                $window.setTimeout(function () {
-                    $ionicLoading.hide();
-                }, 3000);
-            }, false);    
-            window.addEventListener("offline", function(e) {
-                $ionicLoading.show({
-                    template: "<h4>No estás conectado a internet</h4>", 
-                    animation: 'fade-in', showBackdrop: false, 
-                    maxWidth: 500, showDelay: 0
-                });
-                $window.setTimeout(function () {
-                    $ionicLoading.hide();
-                }, 3000);
-            }, false);  
-        }       
-    }
 
-} // end return
+    } // end return
 })
 
 
-/*////////////////////////
-    PDF 
-////////////////////////*/
-.factory('InvoiceService', function ($q) {
-    function base64ToUint8Array(base64) {  
-        var raw = atob(base64);
-        var uint8Array = new Uint8Array(raw.length);
-        for (var i = 0; i < raw.length; i++) {
-        uint8Array[i] = raw.charCodeAt(i);
-        }
-        return uint8Array;
-    }
-
-    function createPdf(invoice) {
-        return $q(function(resolve, reject) {
-            //var dd = createDocumentDefinition(invoice);
-            //var pdf = pdfMake.createPdf(dd);
-            var pdf = invoice;
-
-            pdf.getBase64(function (output) {
-                resolve(base64ToUint8Array(output));
-            });
-        });
-    }
-
+/*///////////////////////////
+    Servicio para archivos
+///////////////////////////*/
+/*
+.service('FileService', function($http, $window, API, $cordovaInAppBrowser){
     return {
-        createPdf: createPdf
-    }
-});
+        descargar: function (filePath, options) {
+            var type = "";
+            if (device.platform === "iOS"){ 
+                type = "_blank"; 
+            }
+            else if (device.platform === "Android") { 
+                type = "_system"; 
+            }
+            else { 
+                type = "_system"; 
+            }
+            $cordovaInAppBrowser.open(filePath, type, options)
+            .then(function (event) {
+                //alert("Success");
+            })
+            .catch(function (event) {
+                //alert("Error");
+            });
+        }
+    } // end return
+})
+*/
+;
