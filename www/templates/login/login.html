@@ -1,23 +1,26 @@
 <ion-view view-title="Login" align-title="left" ng-init="init()">
     <ion-content>
+        
         <!-- Logo -->        
         <div id="content-login" class="hero no-header flat">
             <div class="content">
                 <div class="app-icon"></div>
-                <!-- <h3 style="color:#000;text-shadow: 0 1px 0px #fff;">SMN</h3> -->
             </div>
         </div>
         
         <!-- Formulario -->
-        <div class="list" style="padding-left:60px; padding-right:60px; position:relative; top:-40px;">
+        <div class="list" style="padding-left:60px; padding-right:60px; position:relative; top:-40px; margin-bottom:0px;">
             <label class="item item-input item-floating-label">
                 <span style="color: #EB5E28;" class="input-label">Usuario: </span>
                 <input type="text" placeholder="Usuario" ng-model="loginData.loginUser">
             </label>
             <label class="item item-input item-floating-label">
                 <span style="color: #EB5E28;" class="input-label">Contraseña: </span>
-                <input type="password" placeholder="Contraseña" ng-model="loginData.loginPassword">
+                <input type="{{typeInput}}" placeholder="Contraseña" ng-model="loginData.loginPassword">
             </label>
+            <ion-checkbox class="checkbox-smn" ng-model="myCheck" type="checkbox" name="type" ng-change="changeType()" style="padding-left:20%;">
+                <small>Mostrar/Ocultar contraseña</small>
+            </ion-checkbox>
         </div>
         
         <!-- Submit -->
@@ -28,52 +31,6 @@
                     Ingresar
             </button>
         </div>
-
-        <!-- Modal template -->
-
-        <script id="gbCaseEdit.html" type="text/ng-template">
-            <div class="modal" style="width: 100%; height: 100%; left:1px;top:1px">
-                <ion-header-bar class="bar bar-header bar-assertive">
-                    <h1 class="title">Ups...</h1>
-                </ion-header-bar>
-
-                <ion-content>
-                    <div class="card" style="margin-top:30px; padding-bottom: 30px;">
-                        <div class="item item-text-wrap">
-                            <div class="text-center" style="color:#e42012">
-                                <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>    
-                            </div>
-                            <br>
-                            <h2 class="text-center" style="font-size: 1.4em;">
-                                Parece que has ingresado credenciales inválidas.
-                            </h2>
-                            <h2 class="text-center" style="font-size: 1.4em;">
-                                Por favor revisa las credenciales e intenta de nuevo.
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div style="clear:both; height:300px"></div>
-                </ion-content>
-
-                <div class="float-button">
-                    <span class="height-fix">
-                        <a ui-sref="app.login" class="content" ng-click="cerrarModalError()">
-                            <i class="ion-checkmark-circled"></i>
-                        </a>
-                    </span>
-                </div>
-                <!--
-                <div class="float-button-l">
-                    <span class="height-fix">
-                    <a ui-sref="app.login" class="content" ng-click="cerrarModalError()">
-                        <i class="ion-close-circled"> </i>
-                    </a>
-                    </span>
-                </div>
-                -->
-            </div>
-        </script>
 
     </ion-content>
 </ion-view>

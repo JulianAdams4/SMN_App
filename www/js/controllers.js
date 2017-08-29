@@ -27,12 +27,17 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
 
 .controller('AppCtrl', function(
     $scope, $ionicModal, $ionicPopover, $timeout, $window, $ionicHistory, $state, $ionicLoading, 
-    LoginService, $rootScope ) {
+    LoginService, $rootScope, $ionicNavBarDelegate ) {
 
+    /*
     // Color de la Status bar
     $scope.$on('$ionicView.beforeEnter', function() {
         $rootScope.viewColor = '#f2aa00';
     });
+    */
+
+    // Boton atrás
+    $ionicNavBarDelegate.showBackButton(true);
 
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
@@ -117,7 +122,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     /*//////////////////////////////////////////
         Usado por el menú desplegable lateral
     //////////////////////////////////////////*/
-
+    
     $scope.cerrarSesion = function () {
         $ionicLoading.show({
             template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cerrando sesión</h4>',
@@ -141,7 +146,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
 
 
 .controller('InitLoginCtrl', function(
-    $scope, $window, $ionicHistory, $state) {
+    $scope, $window, $state, LoginService, ConnectivityMonitor, $ionicLoading ) {
 
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
@@ -153,19 +158,31 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
             this.classList.toggle('active');
         });
     }
+
 })
 
 
 
 .controller('LoginCtrl', function(
-    $scope, $timeout, $stateParams, ionicMaterialInk, $ionicModal, $ionicLoading, $ionicHistory, 
-    $state, $ionicPopup, $window, $rootScope, NotifyService, LoginService, ConnectivityMonitor ) {
+    $scope, $timeout,  $ionicLoading, $ionicHistory,  
+    $state, $window, NotifyService, LoginService, ConnectivityMonitor ) {
 
+    $scope.typeInput = 'password';
+    
     $scope.init = function () {
         ConnectivityMonitor.startWatching();
 
         if ( LoginService.isSessionActive() ) {
+            // Animation
+            $ionicLoading.show({
+              template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
+              animation: 'fade-in',
+              showBackdrop: false,
+              maxWidth: 500,
+              showDelay: 0
+            });
             var str = LoginService.getToken("rol");
+            $ionicLoading.hide();
             $state.go(str+'.profile',{});
         }
         else {
@@ -175,7 +192,14 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
         }
     }
 
-    //ionicMaterialInk.displayEffect();
+    $scope.changeType = function () {
+        if ( $scope.typeInput == 'password' ) {
+            $scope.typeInput = 'text';
+        }
+        else {
+            $scope.typeInput = 'password';
+        }
+    }
 
     $scope.login = function () {
         // Campos vacios
@@ -240,8 +264,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
 
 
 .controller('CentrosCtrl', function(
-    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, 
-    CentroService, NotifyService ) {
+    $scope, $stateParams, $timeout, $ionicNavBarDelegate, CentroService, NotifyService, $ionicLoading ) {
 
     // Set Header
     $scope.$parent.showHeader();
@@ -256,14 +279,25 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     $scope.centro = {};
 
     $scope.init = function () {
-        CentroService.allCentros()
-        .success(function (data) {
-            var dataCentro = data[0];
-            $scope.centro = dataCentro;
-        })
-        .error(function (data) {
-            NotifyService.notify('<h4>Ha ocurrido un error y no se pudo<br>obtener la informacion del centro</h4>',3000);
-        })
+      // Animation
+      $ionicLoading.show({
+        template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 500,
+        showDelay: 0
+      });
+
+      CentroService.allCentros()
+      .success(function (data) {
+        var dataCentro = data[0];
+        $scope.centro = dataCentro;
+        $ionicLoading.hide();
+      })
+      .error(function (data) {
+        $ionicLoading.hide();
+        NotifyService.notify('<h4>Ha ocurrido un error y no se pudo<br>obtener la informacion del centro</h4>',3000);
+      });
     }
 
 })
@@ -271,7 +305,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
 
 
 .controller('ControlCtrl', function(
-    ionicMaterialInk, ionicMaterialMotion, $ionicNavBarDelegate, $scope, $stateParams, $timeout, 
+    $ionicLoading, $ionicNavBarDelegate, $scope, $stateParams, $timeout, 
     $window, $http, NotifyService, API ) {
 
     // Set Header
@@ -285,24 +319,27 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     
     // Cargar datos
     $scope.cargarDatosControl = function(){
+      // Animation
+      $ionicLoading.show({
+        template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 500,
+        showDelay: 0
+      });
+
       $http({
         method: 'GET',
         url: API.url + '/datosControlPaciente'
       })
       .then(function(response){
         $scope.datosControl = response.data;
+        $ionicLoading.hide();
       }, function(errorResponse){
         var str = errorResponse.data.message || 'Ha ocurrido un error y no se pudo<br>obtener los datos de control';
+        $ionicLoading.hide();
         NotifyService.notify('<h4>'+str+'</h4>',3000);
       });
-    }
-
-    $scope.marcarTarea = function () {
-        $window.location.href = '#/child/tareas';
-    }
-
-    $scope.regresarATareasParent = function () {
-        $window.location.href = '#/parent/tareas';
     }
 
 })
@@ -320,6 +357,16 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
     $ionicNavBarDelegate.showBackButton(false);
+
+    $scope.effect = function (duration) {
+      $timeout(function() {
+        ionicMaterialMotion.fadeSlideIn({
+            selector: '.animate-fade-slide-in .item'
+        });
+      },duration);
+      // Activate ink for controller
+      ionicMaterialInk.displayEffect();
+    }
 
     $scope.nombreChild = "";
     $scope.noUserData = false;
@@ -344,22 +391,11 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
         return day + '/' + monthNames[monthIndex] + '/' + year;
     }
 
-
-    $scope.changeType = function () {
-        if ( $scope.isText == true ) {
-            $scope.isText = false;
-        }
-        if ( $scope.isText == false ) {
-            $scope.isText = true;
-        }
-        console.log("Changed");
-    }
-
     $scope.getDatosPaciente = function () {
         $ionicNavBarDelegate.showBackButton(false);
         // Animation
         $ionicLoading.show({
-            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
+            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
             animation: 'fade-in',
             showBackdrop: true,
             maxWidth: 500,
@@ -380,6 +416,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
             $rootScope.paciente = $scope.paciente;
 
             $ionicLoading.hide();
+            $scope.effect(100);
         })
         .error(function (data) {
             $scope.noUserData = true;
@@ -392,86 +429,110 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
             $scope.info.Email = 'none@gmail.com';
 
             $ionicLoading.hide();
+            $scope.effect(100);
             NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo obtener los datos</h4>',3000);
         });
-    }
-
-    $scope.getDatosPacienteEdit = function () {
-        $ionicNavBarDelegate.showBackButton(true);
-        // Animation
-        $ionicLoading.show({
-            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 500,
-            showDelay: 0
-        });
-
-        PacienteService.getDatos()
-        .success(function (data) {
-            $scope.noUserData = false;
-            $scope.nombreChild = data.nombres.split(" ")[0] + ' ' + data.apellidos.split(" ")[0];
-            $scope.info.NombresApellidos = data.nombres + ' ' + data.apellidos;
-            data.fechaNacimiento = new Date(data.fechaNacimiento);
-            $scope.info.fechaNacimiento = formatDate(data.fechaNacimiento);
-            $scope.info.Cedula = data.cedula;
-            $scope.info.Sexo = data.sexo;
-            $scope.info.Email = data.email;
-            $scope.paciente = data;
-            $rootScope.paciente = $scope.paciente;
-
-            $ionicLoading.hide();
-        })
-        .error(function (data) {
-            $scope.noUserData = true;
-            $scope.nombreChild = 'Bienvenido, usuario';
-            $scope.info.NombresApellidos = 'None';
-            $scope.info.Cedula = '0900000000';
-            var today = new Date();
-            $scope.info.fechaNacimiento = formatDate(today);
-            $scope.info.Sexo = 'Masculino';
-            $scope.info.Email = 'none@gmail.com';
-
-            $ionicLoading.hide();
-            NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo obtener los datos</h4>',3000);
-        });
-    }
-
-    $scope.submitProfile = function () {
-console.log("submit");
-        if ( $rootScope.paciente && $rootScope.paciente.password && $rootScope.paciente.password.length<8 ) {
-console.log("Menor a 8");
-          NotifyService.notify('<h4>La clave ingresada debe tener<br><b>al menos 8 caracteres</b></h4>',3000);
-        }
-        else {
-            // Animation
-            $ionicLoading.show({
-                template: '<ion-spinner icon="circles"></ion-spinner> <h4>Guardando...</h4>',
-                animation: 'fade-in',
-                showBackdrop: true,
-                maxWidth: 500,
-                showDelay: 0
-            });
-
-            PacienteService.editarPaciente($rootScope.paciente)
-            .success(function (data) {
-                $ionicLoading.hide();
-                NotifyService.notify('<h4>Se ha actualizado la información<br>de su perfil exitosamente</h4>',3000);
-                $timeout(function() {
-                    $window.location.href = '#/paciente/profile';
-                },3000);
-            })
-            .error(function (data) {
-                var errMsg = data.message.split("</i>")[1];
-                var str = errMsg || 'Ha ocurrido un error<br>y no se pudo actualizar los datos';
-                var str2 = '<h4>' + str + '</h4>';
-                $ionicLoading.hide();
-                NotifyService.notify(str2,4000);
-            });
-        }
     }
 
 })
+
+
+
+.controller('EditProfileCtrl', function(
+    ionicMaterialMotion, ionicMaterialInk, $ionicNavBarDelegate, $scope, $stateParams, $timeout, 
+    $rootScope, PacienteService, NotifyService, $ionicLoading, $state, $window ) {
+
+    // Set Header
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
+    $ionicNavBarDelegate.showBackButton(true);
+
+    $scope.typeInput = 'password';
+    $scope.noUserData = false;
+    $scope.paciente = {}
+
+    $scope.effect = function (duration) {
+      $timeout(function() {
+        ionicMaterialMotion.fadeSlideIn({
+            selector: '.animate-fade-slide-in .item'
+        });
+      },duration);
+      // Activate ink for controller
+      ionicMaterialInk.displayEffect();
+    }
+
+    $scope.getDatosPacienteEdit = function () {
+        // Animation
+        $ionicLoading.show({
+            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 500,
+            showDelay: 0
+        });
+
+        PacienteService.getDatos()
+        .success(function (data) {
+            $scope.noUserData = false;
+            data.fechaNacimiento = new Date(data.fechaNacimiento);
+            $scope.paciente = data;
+            $rootScope.paciente = $scope.paciente;
+            $ionicLoading.hide();
+            $scope.effect(100);
+        })
+        .error(function (data) {
+            $scope.noUserData = true;
+            $ionicLoading.hide();
+            $scope.effect(100);
+            NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo obtener los datos</h4>',3000);
+        });
+    }
+
+
+    $scope.changeType = function () {
+      if ( $scope.typeInput == 'password' ) {
+        $scope.typeInput = 'text';
+      }
+      else {
+        $scope.typeInput = 'password';
+      }
+    }
+
+
+    $scope.submitProfile = function () {
+      if ( $rootScope.paciente && $rootScope.paciente.password && $rootScope.paciente.password.length<8 ) {
+        NotifyService.notify('<h4>La clave ingresada debe tener<br><b>al menos 8 caracteres</b></h4>',3000);
+      }
+      else {
+        // Animation
+        $ionicLoading.show({
+          template: '<ion-spinner icon="circles"></ion-spinner> <h4>Guardando</h4>',
+          animation: 'fade-in', showBackdrop: true, maxWidth: 500, showDelay: 0
+        });
+
+        PacienteService.editarPaciente($rootScope.paciente)
+        .success(function (data) {
+          $ionicLoading.hide();
+          NotifyService.notify('<h4>Se ha actualizado la información<br>de su perfil exitosamente</h4>',3000);
+          $timeout(function() {
+            $window.location.href = '#/paciente/profile';
+          },3000);
+        })
+        .error(function (data) {
+          var errMsg = data.message.split("</i>")[1];
+          var str = errMsg || 'Ha ocurrido un error<br>y no se pudo actualizar los datos';
+          var str2 = '<h4>' + str + '</h4>';
+          $ionicLoading.hide();
+          NotifyService.notify(str2,4000);
+        });
+      }
+    }
+
+})
+
 
 
 /*
@@ -510,7 +571,7 @@ console.log("Menor a 8");
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
-    $ionicNavBarDelegate.showBackButton(false);
+    $ionicNavBarDelegate.showBackButton(true);
 
     $scope.disableButtons = false;
     $scope.url = '';
@@ -518,7 +579,7 @@ console.log("Menor a 8");
     $scope.cargarPlanNutricional = function(){
       // Animation
       $ionicLoading.show({
-        template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
+        template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
         animation: 'fade-in',
         showBackdrop: true,
         maxWidth: 500,
@@ -535,23 +596,6 @@ console.log("Menor a 8");
             var documentoUrl = response.data[0].documento;
             $scope.url = documentoUrl;
             $ionicLoading.hide();
-            /*
-            // Obtenemos el documento PDF
-            $http({
-              method: 'GET',
-              url: $scope.url
-            })
-            .then(function (data) {
-                // PDF string here
-                $scope.pdfData = data;
-                $ionicLoading.hide();
-              },
-              function (err) {
-                var msj = "<h4>Ha ocurrido un error y no se <br> pudo obtener su plan nutricional</h4>";
-                $ionicLoading.hide();
-                NotifyService.notify(msj,4000);
-            });
-            */
           }
           else {
             $scope.disableButtons = true;
@@ -566,37 +610,12 @@ console.log("Menor a 8");
           NotifyService.notify("<h4>"+defaultErrMessage+"</h4>",4000);
       });
     }
-    /*
-    $scope.initModal = function (){    
-      // Initialize the modal view.
-      $ionicModal.fromTemplateUrl('pdf-viewer.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function (modal) {
-        $scope.modal = modal;
-      });
-    }
-    */
-    /*
-    // Clean up the modal view.
-    $scope.$on('$destroy', function () {
-      $scope.modal.remove();
-    });
-
-    $scope.mostrarModal = function () {
-      $scope.modal.show();
-    }
-
-    $scope.cerrarModal = function () {
-      $scope.modal.hide();
-    }
-    */
 
     $scope.verPlanVigente = function () {
       var closed = false;
       // Animation
       $ionicLoading.show({
-        template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando...</h4>',
+        template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
         animation: 'fade-in',
         showBackdrop: false,
         maxWidth: 500,
@@ -617,24 +636,6 @@ console.log("Menor a 8");
         };
         var type = "_system";
         window.open($scope.pdfurl, type, 'location=yes'); return false;
-        /*
-        if (device.platform === "iOS") { type = "_blank"; }
-        else if (device.platform === "Android") { type = "_system"; }
-        else { ; }
-        */
-        /*
-        $cordovaInAppBrowser.open($scope.url, type, options)
-        .then(function (event) {
-          closed = true;
-          $ionicLoading.hide();
-          NotifyService.notify("Success", 3000);
-        })
-        .catch(function (event) {
-          closed = true;
-          $ionicLoading.hide();
-          NotifyService.notify("Error", 3000);
-        });
-        */
       }
       else {
         var msj = "<h4><b>Ha ocurrido un error</b><br>No se pudo visualizar su plan nutricional</h4>";
@@ -643,30 +644,9 @@ console.log("Menor a 8");
         NotifyService.notify(msj, 4000);
       }
       // Prevention
-      if ( closed == false ) { $ionicLoading.hide(); }
+      $ionicLoading.hide();
     };
-/*
-    $scope.trustSrc = function(src) {
-      return $sce.trustAsResourceUrl(src);
-    }
 
-    function setDefaultsForPdfViewer($scope) {  
-      $scope.scroll = 0;
-      $scope.loading = 'loading';
-
-      $scope.onError = function (error) {
-         console.error(error);
-      };
-
-      $scope.onLoad = function () {
-        $scope.loading = '';
-      };
-
-      $scope.onProgress = function (progress) {
-        //console.log(progress);
-      };
-    }
-*/
     $scope.descargarPlanVigente = function () {
       var url = $scope.url;
       var fileName = "plan_nutricional.pdf"
@@ -677,13 +657,11 @@ console.log("Menor a 8");
       if ( url != "" ) {
         // Animation
         $ionicLoading.show({
-          template: '<ion-spinner icon="circles"></ion-spinner> <h4>Descargando...</h4>',
-          animation: 'fade-in',
-          showBackdrop: false,
-          maxWidth: 500,
-          showDelay: 0
+          template: '<ion-spinner icon="circles"></ion-spinner> <h4>Descargando plan nutricional</h4>',
+          animation: 'fade-in', showBackdrop: false, maxWidth: 500, showDelay: 0
         });
-        $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
+        // Descarga
+        $cordovaFileTransfer.download( url, targetPath, options, trustHosts )
         .then(
           function(result) {
             // Descargado con exito
@@ -716,13 +694,15 @@ console.log("Menor a 8");
 
 
 .controller('CitasCtrl', function(
-    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, ionicDatePicker ){
+    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, ionicDatePicker, 
+    $ionicNavBarDelegate ){
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
+    $ionicNavBarDelegate.showBackButton(true);
 
     // Activate ink for controller
     /*
@@ -740,13 +720,14 @@ console.log("Menor a 8");
 
 
 .controller('LogrosCtrl', function(
-    $scope, $http, $window, API, NotifyService, $ionicLoading ) {
+    $scope, $http, $window, API, NotifyService, $ionicLoading, $ionicNavBarDelegate ) {
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
+    $ionicNavBarDelegate.showBackButton(true);
 
     $scope.suficientesDatos = false;
     $scope.currentDate  = new Date();
@@ -765,7 +746,7 @@ console.log("Menor a 8");
     $scope.getDatosPaciente = function () {
       // Animation
       $ionicLoading.show({
-          template: '<ion-spinner icon="circles"></ion-spinner> <h4>Guardando...</h4>',
+          template: '<ion-spinner icon="circles"></ion-spinner> <h4>Guardando</h4>',
           animation: 'fade-in',
           showBackdrop: true,
           maxWidth: 500,

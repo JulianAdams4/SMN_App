@@ -1,105 +1,152 @@
 <ion-view view-title="Centros" ng-init="init()">
     <ion-content ng-class="{expanded:isExpanded}">
-        <div class="content" style="padding:5% 5% 5% 5%;">
+        <div class="content" style="padding:5% 3% 5% 3%;">
 
-            <div class="list">
-              <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 text-center">
-                <h3 class="dark" style="font-weight:bold; font-size:1.2em;">Datos del centro</h3>
-              </div>
-
-              <div ng-if="centro.direccion" class="item item-icon-left" style="padding:3% 1%;">
+          <!-- Datos del centro -->
+          <div class="item card-item" style="padding:0%;">
+            <div class="card ink ink-dark">
+              <div class="item item-text-wrap" style="padding:2% 0%;">
                 <div class="text-center">
-                  <i class="icon ion-map"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;"> Dirección </h3>
-                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.direccion"></h3>
-                </div>
-              </div>
-
-              <div ng-if="centro.telefono" class="item item-icon-left" style="padding:3% 1%;">
-                <div class="text-center">
-                  <i class="icon ion-android-call"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;"> Teléfono </h3>
-                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.telefono"></h3>
-                </div>
-              </div>
-
-              <div ng-if="centro.horariosAtencion" class="item item-icon-left" style="padding:3% 1%;">
-                <div class="text-center">
-                  <i class="icon ion-android-time"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;">Horarios de atención</h3>
-                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.horariosAtencion"></h3>
-                </div>
-              </div>
-
-              <div ng-if="centro.servicios" class="item item-icon-left" style="padding:3% 1%;">
-                <div class="text-center">
-                  <i class="icon ion-ios-list-outline"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;">Servicios</h3>
-                  <h3 class="dark line-clamp" style="font-size:1.2em;" ng-bind="centro.servicios"></h3>
-                </div>
-              </div>
-
-              <hr style="margin:20px 30px; color:#f2aa00;">
-
-              <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 text-center">
-                <h3 class="dark" style="font-weight:bold; font-size:1.2em;">Datos de la nutricionista</h3>
-              </div>
-
-              <div ng-if="centro.nutricionista.nombres || centro.nutricionista.apellidos" class="item item-icon-left" style="padding:3% 1%;">
-                <div class="text-center">
-                  <i class="icon ion-person"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;">Nombres y apellidos</h3>
-                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.nutricionista.nombres + ' ' + centro.nutricionista.apellidos"></h3>
-                </div>
-              </div>
-
-              <div ng-if="centro.nutricionista.estudios" class="item item-icon-left" style="padding:3% 1%;">
-                <div class="text-center">
-                  <i class="icon ion-ios-book-outline"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;">Estudios</h3>
-                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.nutricionista.estudios"></h3>
-                </div>
-              </div>
-
-              <div ng-if="centro.nutricionista.especializaciones" class="item item-icon-left" style="padding:3% 1%;">
-                <div class="text-center">
-                  <i class="icon ion-ribbon-b"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;">Especializaciones</h3>
-                  <h3 class="dark" style="font-size:1.2em;" ng-bind="centro.nutricionista.especializaciones"></h3>
-                </div>
-              </div>
-
-              <hr style="margin:20px 30px; background-color:#000">
-
-              <div ng-if="centro.redesSociales.length>0" class="col-lg-12 col-md-12 col-xs-12 col-sm-12 text-center">
-                <h3 class="dark" style="font-weight:bold; font-size:1.2em;">Redes sociales</h3>
-              </div>
-
-              <div ng-if="centro.redesSociales.length>0" ng-repeat="social in centro.redesSociales" class="item item-icon-left" style="padding:3% 1%;">
-                <!-- Facebook -->
-                <div ng-if="social.nombre=='Facebook'" class="text-center">
-                  <i class="icon ion-social-facebook"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;"> 
-                    <a href="{{social.link}}"> Facebook</a>
+                  <h3 class="dark" style="font-weight:bold; font-size:1.2em;">
+                    Datos del centro
                   </h3>
                 </div>
-                <!-- Twitter -->
-                <div ng-if="social.nombre=='Twitter'" class="text-center">
-                  <i class="icon ion-social-twitter"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;">
-                    <a href="{{social.link}}"> Twitter</a>
-                  </h3>
+              </div>
+
+              <div ng-if="centro.direccion" class="item item-icon-left item-text-wrap">
+                <i class="icon ion-map"></i>
+                <div style="padding-left:5%">
+                  <strong>Direccion</strong>
+                  <br>
+                  {{centro.direccion}}
                 </div>
-                <!--Instagram -->
-                <div ng-if="social.nombre=='Instagram'" class="text-center">
-                  <i class="icon ion-social-instagram"></i>
-                  <h3 style="font-weight:bold; font-size:1.2em;">
-                    <a href="{{social.link}}"> Instagram</a>
-                  </h3>
+              </div>
+
+              <div ng-if="centro.telefono" class="item item-icon-left item-text-wrap">
+                <i class="icon ion-android-call"></i>
+                <div style="padding-left:5%">
+                  <strong>Teléfono</strong>
+                  <br>
+                  {{centro.telefono}}
+                </div>
+              </div>
+
+              <div ng-if="centro.horariosAtencion" class="item item-icon-left item-text-wrap">
+                <i class="icon ion-android-time"></i>
+                <div style="padding-left:5%">
+                  <strong>Horarios de atención</strong>
+                  <br>
+                  {{centro.horariosAtencion}}
+                </div>
+              </div>
+
+              <div ng-if="centro.servicios" class="item item-icon-left item-text-wrap">
+                <i class="icon ion-ios-list-outline"></i>
+                <div style="padding-left:5%">
+                  <strong>Servicios</strong>
+                  <br>
+                  {{centro.servicios}}
                 </div>
               </div>
 
             </div>
+          </div>
+
+          <hr style="margin:10px 30px; color:#f2aa00;">
+
+          <!-- Datos de la nutricionista -->
+          <div class="item card-item" style="padding:0%;">
+            <div class="card ink ink-dark">
+              <div class="item item-text-wrap" style="padding:2% 0%;">
+                <div class="text-center">
+                  <h3 class="dark" style="font-weight:bold; font-size:1.2em;">
+                    Datos de la nutricionista
+                  </h3>
+                </div>
+              </div>
+
+              <div ng-if="centro.nutricionista.nombres || centro.nutricionista.apellidos" class="item item-icon-left item-text-wrap">
+                <i class="icon ion-person"></i>
+                <div style="padding-left:5%">
+                  <strong>Nombres y apellidos</strong>
+                  <br>
+                  {{centro.nutricionista.nombres}} {{centro.nutricionista.apellidos}}
+                </div>
+              </div>
+
+              <div ng-if="centro.nutricionista.estudios" class="item item-icon-left item-text-wrap">
+                <i class="icon ion-ios-book-outline"></i>
+                <div style="padding-left:5%">
+                  <strong>Estudios</strong>
+                  <br>
+                  {{centro.nutricionista.estudios}}
+                </div>
+              </div>
+
+              <div ng-if="centro.nutricionista.especializaciones" class="item item-icon-left item-text-wrap">
+                <i class="icon ion-ribbon-b"></i>
+                <div style="padding-left:5%">
+                  <strong>Especializaciones</strong>
+                  <br>
+                  {{centro.nutricionista.especializaciones}}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <hr style="margin:10px 30px; color:#f2aa00;">
+
+          <!-- Redes sociales -->
+          <div class="item card-item" style="padding:0%;">
+            <div class="card ink ink-dark">
+              <div class="item item-text-wrap" style="padding:2% 0%;">
+                <div class="text-center">
+                  <h3 class="dark" style="font-weight:bold; font-size:1.2em;">
+                    Visita nuestras redes sociales
+                  </h3>
+                </div>
+              </div>
+
+              <div class="item item-text-wrap" style="padding:0% 5%">
+                <div class="text-center"> 
+                  <small>¡Pulsa sobre la red social que desees visitar!</small>
+                </div>
+              </div>
+
+              <!-- Redes sociales -->
+              <div ng-if="centro.redesSociales.length>0" ng-repeat="social in centro.redesSociales" style="padding:3% 1%;">
+                <!-- Facebook -->
+                <div ng-if="social.nombre=='Facebook'" class="item item-icon-left">
+                  <i class="icon ion-social-facebook"></i> 
+                  <div style="padding-left:5%">
+                    <h3 style="font-weight:bold; font-size:1.2em; margin-top:2%" class="dark">
+                      <a href="{{social.link}}"> Facebook</a>  
+                    </h3>
+                  </div>
+                </div>
+                <!-- Twitter -->
+                <div ng-if="social.nombre=='Twitter'" class="item item-icon-left">
+                  <i class="icon ion-social-twitter"></i>
+                  <div style="padding-left:5%">
+                    <h3 style="font-weight:bold; font-size:1.2em; margin-top:2%" class="dark">
+                      <a href="{{social.link}}"> Twitter</a>
+                    </h3>
+                  </div>
+                </div>
+                <!--Instagram -->
+                <div ng-if="social.nombre=='Instagram'" class="item item-icon-left">
+                  <i class="icon ion-social-instagram"></i> 
+                  <div style="padding-left:5%">
+                    <h3 style="font-weight:bold; font-size:1.2em; margin-top:2%" class="dark">
+                      <a href="{{social.link}}"> Instagram</a>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
 
         </div>
     </ion-content>

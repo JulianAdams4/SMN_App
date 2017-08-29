@@ -1,6 +1,6 @@
 <ion-side-menus enable-menu-with-back-views="true">
     <ion-side-menu-content>
-        <ion-nav-bar class="bar-balanced" ng-style="{'background-color': viewColor}" ng-class="{expanded: isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
+        <ion-nav-bar class="bar-energized" ng-style="{'background-color': viewColor}" ng-class="{expanded: isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
             <ion-nav-back-button class="no-text">
             </ion-nav-back-button>
             <ion-nav-buttons side="right">
@@ -21,22 +21,22 @@
         <ion-content class="stable-bg has-expanded-header" style="padding-top:50px;">
             <ion-list id="sidemenu">
                 <ion-item nav-clear menu-close ui-sref="paciente.profile">
-                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
+                    <i class="ion-chevron-right app-color"></i> &nbsp; 
                     Perfil
                 </ion-item>
 
                 <ion-item nav-clear menu-close ui-sref="paciente.centros">
-                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
+                    <i class="ion-chevron-right app-color"></i> &nbsp; 
                     Centros
                 </ion-item>
 
                 <ion-item nav-clear menu-close ui-sref="paciente.control">
-                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
+                    <i class="ion-chevron-right app-color"></i> &nbsp; 
                     Datos de control
                 </ion-item>
 
                 <ion-item nav-clear menu-close ui-sref="paciente.plan">
-                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
+                    <i class="ion-chevron-right app-color"></i> &nbsp; 
                     Plan nutricional
                 </ion-item>
                 <!--
@@ -47,12 +47,12 @@
                 -->
 
                 <ion-item nav-clear menu-close ui-sref="paciente.logros">
-                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
+                    <i class="ion-chevron-right app-color"></i> &nbsp; 
                     Mis logros
                 </ion-item>
 
                 <ion-item nav-clear menu-close ng-click="cerrarSesion()">
-                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
+                    <i class="ion-chevron-right app-color"></i> &nbsp; 
                     Cerrar sesión
                 </ion-item>
             </ion-list>

@@ -8,7 +8,7 @@
 var dependencies = ['ionic', 'starter.controllers', 'starter.services', 'ionic-material', 'pdf'];
 
 angular.module('starter', dependencies)
-.run(function( $ionicPlatform, $ionicHistory ) {
+.run(function( $ionicPlatform, $ionicHistory, $window, $ionicLoading ) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -22,17 +22,26 @@ angular.module('starter', dependencies)
       StatusBar.styleDefault();
     }
 
-    // To Conditionally Disable Back
+    // To Disable Back in Entire App
+    var backbutton = 0;
     $ionicPlatform.registerBackButtonAction(function(){
-      if( $ionicHistory.currentStateName === 'app.login' ){
+      if ( backbutton == 0 ) {
         event.preventDefault();
+        $ionicLoading.show({
+          template: "<h4>Presione de nuevo para salir</h4>", 
+          animation: 'fade-in', showBackdrop: false, 
+          maxWidth: 500, showDelay: 0
+        });
+        $window.setTimeout(function () {
+          $ionicLoading.hide();
+          backbutton++;
+        },1500);
+      } 
+      else {
+        backbutton = 0;
+        navigator.app.exitApp();
       }
-      else if ( $ionicHistory.currentStateName === 'paciente.profile' ) {
-        event.preventDefault();
-      }
-      else{
-        $ionicHistory.goBack();
-      }
+
     },100);
 
   });
@@ -59,7 +68,6 @@ angular.module('starter', dependencies)
   
   /*////////////////////
       Login 
-      ConnectivityMonitor.startWatching();
   ////////////////////*/
   .state('app.login', {
     url: '/login',
@@ -112,11 +120,11 @@ angular.module('starter', dependencies)
     views: {
       'menuContent': {
         templateUrl: 'templates/paciente/formPerfil.html',
-        controller: 'ProfileCtrl'
+        controller: 'EditProfileCtrl'
       },
       'fabContent': {
         template: '<button id="fabSubProf" class="button button-fab button-fab-bottom-right theme-color-app" ng-click="submitProfile()"><i class="icon ion-checkmark"></i></button>',
-        controller: 'ProfileCtrl'
+        controller: 'EditProfileCtrl'
       }
     }
   })

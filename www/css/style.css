@@ -1,3 +1,8 @@
+:root {
+  --color-app: rgb(255, 152, 0);
+  /*--color-app: #000;*/
+}
+
 h1 {
     color: #fff;
     text-shadow: 0 1px 0px #000;
@@ -172,12 +177,16 @@ ion-spinner * {
 #formPerfil label input[type=text]:focus, 
 #formPerfil label input[type=email]:focus {
   outline: none;
-  border-bottom: 2px solid #f2aa00;
+  border-bottom: 2px solid var(--color-app);
 }
 
 .theme-color-app {
-    background-color:#f2aa00!important; 
-    color:#fff;
+  background-color: var(--color-app) !important; 
+  color:#fff;
+}
+
+.color-app {
+  color: var(--color-app);
 }
 
 .break-word {
@@ -191,3 +200,23 @@ ion-spinner * {
   -webkit-box-orient: vertical;
   text-overflow: -o-ellipsis-lastline;
 }
+
+.checkbox-smn input:checked:before,
+.checkbox-smn input:checked + .checkbox-icon:before {
+  background: var(--color-app);
+  border-color: var(--color-app); 
+}
+
+.checkbox-square {
+  padding-left: 0px;
+  margin-bottom: 0px;
+}
+
+#fabSubProf {
+  color: #fff;
+}
+
+a:link { color: #000; text-decoration: none; }
+a:visited { color: #000; text-decoration: none; }
+a:hover { color: #000; text-decoration: none; }
+a:active { color: #000; text-decoration: none; }
