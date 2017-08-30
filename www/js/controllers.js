@@ -422,7 +422,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
             $rootScope.paciente = $scope.paciente;
 
             $ionicLoading.hide();
-            $scope.effect(100);
+            //$scope.effect(100);
         })
         .error(function (data) {
             $scope.noUserData = true;
@@ -435,7 +435,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
             $scope.info.Email = 'none@gmail.com';
 
             $ionicLoading.hide();
-            $scope.effect(100);
+            //$scope.effect(100);
             NotifyService.notify('<h4>Ha ocurrido un error<br>y no se pudo obtener los datos</h4>',3000);
         });
     }

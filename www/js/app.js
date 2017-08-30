@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 
-var dependencies = ['ionic', 'starter.controllers', 'starter.services', 'ionic-material', 'pdf'];
+var dependencies = ['ionic', 'starter.controllers', 'starter.services', 'ionic-material'];
 
 angular.module('starter', dependencies)
 .run(function( $ionicPlatform, $ionicHistory, $window, $ionicLoading ) {
