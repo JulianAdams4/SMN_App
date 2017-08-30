@@ -1,6 +1,7 @@
 /* global angular, document, window */
 'use strict';
-angular.module('starter.controllers', ['ngCordova', 'chart.js'])
+angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
+
 
 
 
@@ -35,10 +36,6 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
         $rootScope.viewColor = '#f2aa00';
     });
     */
-
-    // Boton atrás
-    $ionicNavBarDelegate.showBackButton(true);
-
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
     $scope.hasHeaderFabRight = false;
@@ -53,7 +50,6 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     ////////////////////////////////////////
     // Layout Methods
     ////////////////////////////////////////
-
     $scope.hideNavBar = function() {
         document.getElementsByTagName('ion-nav-bar')[0].style.display = 'none';
     };
@@ -122,7 +118,6 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     /*//////////////////////////////////////////
         Usado por el menú desplegable lateral
     //////////////////////////////////////////*/
-    
     $scope.cerrarSesion = function () {
         $ionicLoading.show({
             template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cerrando sesión</h4>',
@@ -145,6 +140,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
 
 
 
+
 .controller('InitLoginCtrl', function(
     $scope, $window, $state, LoginService, ConnectivityMonitor, $ionicLoading ) {
 
@@ -160,6 +156,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     }
 
 })
+
 
 
 
@@ -263,6 +260,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
 
 
 
+
 .controller('CentrosCtrl', function(
     $scope, $stateParams, $timeout, $ionicNavBarDelegate, CentroService, NotifyService, $ionicLoading ) {
 
@@ -270,7 +268,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     // Sin boton atrás
-    $ionicNavBarDelegate.showBackButton(true);
+    $ionicNavBarDelegate.showBackButton(false);
     // Que la navbar no se expanda
     $scope.$parent.setExpanded(false);
     // Sin fabContent
@@ -291,6 +289,12 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
       CentroService.allCentros()
       .success(function (data) {
         var dataCentro = data[0];
+        if ( dataCentro.redesSociales ) {
+          for ( var i=0 ; i<dataCentro.redesSociales.length; i++ ){
+            var truncated = dataCentro.redesSociales[i].link.split(".com/")[1];
+            dataCentro.redesSociales[i].link = truncated;
+          }
+        }
         $scope.centro = dataCentro;
         $ionicLoading.hide();
       })
@@ -304,6 +308,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
 
 
 
+
 .controller('ControlCtrl', function(
     $ionicLoading, $ionicNavBarDelegate, $scope, $stateParams, $timeout, 
     $window, $http, NotifyService, API ) {
@@ -312,7 +317,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     // Boton atrás
-    $ionicNavBarDelegate.showBackButton(true);
+    $ionicNavBarDelegate.showBackButton(false);
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
@@ -343,6 +348,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     }
 
 })
+
 
 
 
@@ -435,6 +441,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     }
 
 })
+
 
 
 
@@ -571,7 +578,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
-    $ionicNavBarDelegate.showBackButton(true);
+    $ionicNavBarDelegate.showBackButton(false);
 
     $scope.disableButtons = false;
     $scope.url = '';
@@ -693,31 +700,6 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
 
 
 
-.controller('CitasCtrl', function(
-    $scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, ionicDatePicker, 
-    $ionicNavBarDelegate ){
-
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    $scope.isExpanded = false;
-    $scope.$parent.setExpanded(false);
-    $scope.$parent.setHeaderFab(false);
-    $ionicNavBarDelegate.showBackButton(true);
-
-    // Activate ink for controller
-    /*
-    ionicMaterialInk.displayEffect();
-
-    ionicMaterialMotion.pushDown({
-        selector: '.push-down'
-    });
-    ionicMaterialMotion.fadeSlideInRight({
-        selector: '.animate-fade-slide-in .item'
-    });
-    */
-})
-
-
 
 .controller('LogrosCtrl', function(
     $scope, $http, $window, API, NotifyService, $ionicLoading, $ionicNavBarDelegate ) {
@@ -727,7 +709,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
-    $ionicNavBarDelegate.showBackButton(true);
+    $ionicNavBarDelegate.showBackButton(false);
 
     $scope.suficientesDatos = false;
     $scope.currentDate  = new Date();
@@ -932,4 +914,169 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js'])
     }
 
 })
-;
+
+
+
+
+.controller('CitasCtrl', function(
+    $scope, $http, $compile, $ionicPopup, $timeout, $ionicNavBarDelegate, API, uiCalendarConfig,
+    NotifyService ){
+  
+  $scope.$parent.showHeader();
+  $scope.$parent.clearFabs();
+  $scope.isExpanded = false;
+  $scope.$parent.setExpanded(false);
+  $scope.$parent.setHeaderFab(false);
+  $ionicNavBarDelegate.showBackButton(false);
+
+  /* event source that contains custom events on the scope */
+  $scope.citas = [];
+  $scope.eventSources = [];
+
+  $scope.init = function(){
+    $http({
+      method: 'GET',
+      url: API.url+'/cita'
+    })
+    .then(function(response){
+        $scope.citas = response.data;
+        for(var i in $scope.citas){
+          $scope.citas[i].start = new Date($scope.citas[i].start);
+          $scope.citas[i].end = new Date($scope.citas[i].end);
+        }
+        $scope.eventSources.push($scope.citas);
+      }, 
+      function(errorResponse){
+         console.log(errorResponse);
+    });
+    $scope.eventSources = [$scope.citas];  
+  }
+
+  /* alert on eventClick */
+  $scope.alertOnEventClick = function(cita){
+      if(!cita.estaOcupado){
+        var myPopup = $ionicPopup.show({
+            template: '<div class="text-center"><p style="font-size:1.2em;padding:2%;margin-bottom:0px;">Al seleccionar esta opción <strong>reservará una cita</strong> con la nutricionista<br><br>¿Está seguro?</p></div>',
+            title: 'Cita disponible',
+            subTitle: '',
+            scope: $scope,
+            buttons: [
+              {
+                text: '<b>Sí</b>',
+                type: 'button theme-color-app',
+                onTap: function(e) {
+                  return e;
+                }
+              },
+              { text: 'No' }
+            ]
+        });
+
+        myPopup.then(function(res) {
+          if (res){
+              $http({
+                method: 'PUT',
+                url: API.url+'/reservarCita/'+cita._id
+              }).then(function(response){
+                for(var i in $scope.citas){
+                  if($scope.citas[i]._id == response.data._id){
+                    $scope.citas.splice(i, 1);
+                  }
+                }
+                response.data.start = new Date(response.data.start);
+                response.data.end = new Date(response.data.end);
+                $scope.citas.push(response.data);
+                myPopup.close();
+                var msj = '<h5>¡Cita <b>reservada exitosamente</b>!</h5>';
+                NotifyService.notify(msj,4000);
+              }, function(errorResponse){
+                myPopup.close();
+                var defErrMsj = errorResponse.data.message || "Ha ocurrido un error y no se pudo reservar la cita";
+                var msj = '<h4>'+defErrMsj+'</h4>';
+                NotifyService.notify(msj,4000);
+             });
+          } 
+          else {
+            console.log('No reservada');
+          }
+        });
+      }
+      else if(cita.estaOcupado){
+        var myPopup = $ionicPopup.show({
+            template: '<div class="text-center"><p style="font-size:1.2em;padding:2%;margin-bottom:0px;">Al seleccionar esta opción <strong>cancelará su cita</strong> con la nutricionista<br><br>¿Está seguro?</p></div>',
+            title: 'Cita programada',
+            subTitle: '',
+            scope: $scope,
+            buttons: [
+              {
+                text: '<b>Sí</b>',
+                type: 'button button-assertive',
+                onTap: function(e) {
+                  return e;
+                }
+              },
+              { text: 'No' }
+            ]
+        });
+
+        myPopup.then(function(res){
+          if (res) {
+            $http({
+              method: 'PUT',
+              url: API.url+'/cancelarCitaPaciente/'+cita._id
+            })
+            .then(
+              function(response){
+                for(var i in $scope.citas){
+                  if($scope.citas[i]._id == response.data._id){
+                    $scope.citas.splice(i, 1);
+                  }
+                }
+                response.data.start = new Date(response.data.start);
+                response.data.end = new Date(response.data.end);
+                $scope.citas.push(response.data);
+                myPopup.close();
+                var msj = '<h5>¡Cita <b>cancelada exitosamente</b>!</h5>';
+                NotifyService.notify(msj,4000);
+              }, 
+              function(errorResponse){
+                myPopup.close();
+                var defErrMsj = errorResponse.data.message || "Ha ocurrido un error y no se pudo cancelar la cita";
+                var msj = '<h4>'+defErrMsj+'</h4>';
+                NotifyService.notify(msj,4000);
+            });
+
+          } 
+          else {
+            console.log('No cancelada');
+          }
+        });
+      } // Ocupado
+  };
+
+  $scope.uiConfig = {
+    calendar:{
+      height: 450,
+      editable: false,
+      header:{
+        left: 'prev,today,next',
+        center: 'title',
+        right: 'month,agendaWeek,listMonth'
+      },
+      eventClick: $scope.alertOnEventClick,
+      defaultView: 'agendaWeek',
+      allDaySlot: false,
+      minTime: "09:00:00",
+      maxTime: "19:00:00",
+      titleFormat:{
+        month: 'MMMM YYYY',
+      },
+      monthNames: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+      dayNamesShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+      buttonText: {
+        today:'Hoy'
+      },
+    }
+  };
+
+});

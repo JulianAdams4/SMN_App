@@ -3,9 +3,9 @@
         <div class="content" style="padding:5% 3% 5% 3%;">
 
           <!-- Datos del centro -->
-          <div class="item card-item" style="padding:0%;">
+          <div class="item card-item" style="padding:3% 0%;">
             <div class="card ink ink-dark">
-              <div class="item item-text-wrap" style="padding:2% 0%;">
+              <div class="item item-text-wrap" style="padding:5% 0%;">
                 <div class="text-center">
                   <h3 class="dark" style="font-weight:bold; font-size:1.2em;">
                     Datos del centro
@@ -41,7 +41,7 @@
               </div>
 
               <div ng-if="centro.servicios" class="item item-icon-left item-text-wrap">
-                <i class="icon ion-ios-list-outline"></i>
+                <i class="icon ion-android-document"></i>
                 <div style="padding-left:5%">
                   <strong>Servicios</strong>
                   <br>
@@ -55,17 +55,17 @@
           <hr style="margin:10px 30px; color:#f2aa00;">
 
           <!-- Datos de la nutricionista -->
-          <div class="item card-item" style="padding:0%;">
+          <div class="item card-item" style="padding:3% 0%;">
             <div class="card ink ink-dark">
-              <div class="item item-text-wrap" style="padding:2% 0%;">
+              <div class="item item-text-wrap" style="padding:5% 0%;">
                 <div class="text-center">
                   <h3 class="dark" style="font-weight:bold; font-size:1.2em;">
-                    Datos de la nutricionista
+                    Nutricionista a cargo
                   </h3>
                 </div>
               </div>
 
-              <div ng-if="centro.nutricionista.nombres || centro.nutricionista.apellidos" class="item item-icon-left item-text-wrap">
+              <div ng-if="centro.nutricionista.nombres || centro.nutricionista.apellidos" class="item item-icon-right item-text-wrap">
                 <i class="icon ion-person"></i>
                 <div style="padding-left:5%">
                   <strong>Nombres y apellidos</strong>
@@ -74,8 +74,8 @@
                 </div>
               </div>
 
-              <div ng-if="centro.nutricionista.estudios" class="item item-icon-left item-text-wrap">
-                <i class="icon ion-ios-book-outline"></i>
+              <div ng-if="centro.nutricionista.estudios" class="item item-icon-right item-text-wrap">
+                <i class="icon ion-university"></i>
                 <div style="padding-left:5%">
                   <strong>Estudios</strong>
                   <br>
@@ -83,7 +83,7 @@
                 </div>
               </div>
 
-              <div ng-if="centro.nutricionista.especializaciones" class="item item-icon-left item-text-wrap">
+              <div ng-if="centro.nutricionista.especializaciones" class="item item-icon-right item-text-wrap">
                 <i class="icon ion-ribbon-b"></i>
                 <div style="padding-left:5%">
                   <strong>Especializaciones</strong>
@@ -98,49 +98,47 @@
           <hr style="margin:10px 30px; color:#f2aa00;">
 
           <!-- Redes sociales -->
-          <div class="item card-item" style="padding:0%;">
+          <div class="item card-item" style="padding:3% 0%;">
             <div class="card ink ink-dark">
-              <div class="item item-text-wrap" style="padding:2% 0%;">
+              <div class="item item-text-wrap" style="padding:5% 0%;">
                 <div class="text-center">
                   <h3 class="dark" style="font-weight:bold; font-size:1.2em;">
                     Visita nuestras redes sociales
                   </h3>
                 </div>
               </div>
-
+              <!--
               <div class="item item-text-wrap" style="padding:0% 5%">
                 <div class="text-center"> 
                   <small>¡Pulsa sobre la red social que desees visitar!</small>
                 </div>
               </div>
+              -->
 
               <!-- Redes sociales -->
-              <div ng-if="centro.redesSociales.length>0" ng-repeat="social in centro.redesSociales" style="padding:3% 1%;">
+              <div ng-if="centro.redesSociales.length>0" ng-repeat="social in centro.redesSociales" style="padding:5% 1%;">
                 <!-- Facebook -->
                 <div ng-if="social.nombre=='Facebook'" class="item item-icon-left">
                   <i class="icon ion-social-facebook"></i> 
-                  <div style="padding-left:5%">
-                    <h3 style="font-weight:bold; font-size:1.2em; margin-top:2%" class="dark">
-                      <a href="{{social.link}}"> Facebook</a>  
-                    </h3>
+                  <div style="padding-left:4%">
+                    <strong>Facebook</strong><br>
+                    {{social.link}}
                   </div>
                 </div>
                 <!-- Twitter -->
                 <div ng-if="social.nombre=='Twitter'" class="item item-icon-left">
                   <i class="icon ion-social-twitter"></i>
-                  <div style="padding-left:5%">
-                    <h3 style="font-weight:bold; font-size:1.2em; margin-top:2%" class="dark">
-                      <a href="{{social.link}}"> Twitter</a>
-                    </h3>
+                  <div style="padding-left:4%">
+                    <strong>Twitter</strong><br>
+                    {{social.link}}
                   </div>
                 </div>
                 <!--Instagram -->
                 <div ng-if="social.nombre=='Instagram'" class="item item-icon-left">
                   <i class="icon ion-social-instagram"></i> 
-                  <div style="padding-left:5%">
-                    <h3 style="font-weight:bold; font-size:1.2em; margin-top:2%" class="dark">
-                      <a href="{{social.link}}"> Instagram</a>
-                    </h3>
+                  <div style="padding-left:4%">
+                    <strong>Instagram</strong><br>
+                    {{social.link}}
                   </div>
                 </div>
               </div>

@@ -15,44 +15,45 @@
         
         <ion-header-bar class="expanded"">
             <span class="avatar-pf" style="background:url('img/white.jpg'); background-size:cover;"></span>
-            <h2 style="color:#000;text-shadow: 0 1px 0px #000;font-size:1.3em;">SMN</h2>
+            <h2 style="color:#000;text-shadow: 0 1px 0px #000;font-size:1.3em;">
+              SMN
+            </h2>
         </ion-header-bar>
 
         <ion-content class="stable-bg has-expanded-header" style="padding-top:50px;">
             <ion-list id="sidemenu">
                 <ion-item nav-clear menu-close ui-sref="paciente.profile">
-                    <i class="ion-chevron-right app-color"></i> &nbsp; 
+                    <i class="ion-chevron-right" style="color:var(--color-app)"></i> &nbsp; 
                     Perfil
                 </ion-item>
 
                 <ion-item nav-clear menu-close ui-sref="paciente.centros">
-                    <i class="ion-chevron-right app-color"></i> &nbsp; 
+                    <i class="ion-chevron-right" style="color:var(--color-app)"></i> &nbsp; 
                     Centros
                 </ion-item>
 
                 <ion-item nav-clear menu-close ui-sref="paciente.control">
-                    <i class="ion-chevron-right app-color"></i> &nbsp; 
+                    <i class="ion-chevron-right" style="color:var(--color-app)"></i> &nbsp;  
                     Datos de control
                 </ion-item>
 
                 <ion-item nav-clear menu-close ui-sref="paciente.plan">
-                    <i class="ion-chevron-right app-color"></i> &nbsp; 
+                    <i class="ion-chevron-right" style="color:var(--color-app)"></i> &nbsp; 
                     Plan nutricional
                 </ion-item>
-                <!--
+                
                 <ion-item nav-clear menu-close ui-sref="paciente.citas">
-                    <i class="ion-chevron-right" style="color:#EB5E28;"></i> &nbsp; 
+                    <i class="ion-chevron-right" style="color:var(--color-app)"></i> &nbsp;
                     Citas
                 </ion-item>
-                -->
 
                 <ion-item nav-clear menu-close ui-sref="paciente.logros">
-                    <i class="ion-chevron-right app-color"></i> &nbsp; 
+                    <i class="ion-chevron-right" style="color:var(--color-app)"></i> &nbsp; 
                     Mis logros
                 </ion-item>
 
                 <ion-item nav-clear menu-close ng-click="cerrarSesion()">
-                    <i class="ion-chevron-right app-color"></i> &nbsp; 
+                    <i class="ion-chevron-right" style="color:var(--color-app)"></i> &nbsp; 
                     Cerrar sesión
                 </ion-item>
             </ion-list>

@@ -11,6 +11,7 @@
     "ionic-datepicker": "^1.2.1",
     "md-data-table": "^2.2.0",
     "pdfmake": "^0.1.32",
-    "angular-pdf": "^2.0.0"
+    "angular-pdf": "^2.0.0",
+    "angular-ui-calendar": "^1.0.2"
   }
 }
