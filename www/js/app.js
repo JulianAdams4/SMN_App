@@ -1,17 +1,80 @@
-// Ionic Starter App
+/*==========================================================
+  angular.module is a global place for creating, 
+  registering and retrieving Angular modules
+  
+  'starter' is the name of this angular module example 
+  (also set in a <body> attribute in index.html)
+  
+  The 2nd parameter is an array of 'requires'
+  'starter.controllers' is found in controllers.js
+------------------------------------------------------------*/
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
+function checkSession($window, $ionicLoading, $location) {
+    var a = $window.localStorage.rol;
+    var b = ( $window.localStorage.rol !="" ? true : false ); 
+    if (a && b) {
+        /*===================
+            Already Logged
+        ---------------------*/
+        // Animation
+        $ionicLoading.show({
+          template: '<ion-spinner icon="circles"></ion-spinner><br><h4>Cargando</h4>', 
+          animation: 'fade-in', showBackdrop: false, 
+          maxWidth: 500, showDelay: 0
+        });
+        // Get user role from storage
+        var role = $window.localStorage.getItem(String("rol"));
+        // Hide animation
+        $window.setTimeout(function () {
+            $ionicLoading.hide();
+            if ( role === 'paciente' ) {
+                //  Logged as 'paciente' -> Profile
+                $location.path('/paciente/profile');
+            } 
+            else {
+                //  Unathorized session -> Login
+                $location.path('/app/login');
+            }
+        }, 1500);
+    }
+    else {
+        /*=============== 
+            Not logged
+        -----------------*/
+        $location.path('/app/login');
+    }
+}
 
-var dependencies = ['ionic', 'starter.controllers', 'starter.services', 'ionic-material'];
+
+
+/*==========================================================
+  Registering onDeviceReady callback with deviceready event
+/*---------------------------------------------------------*/
+function onDeviceReady() {
+    angular.bootstrap(document, ["starter"]);
+}
+
+document.addEventListener("deviceready", onDeviceReady, false);
+
+
+/*//////////////////////////////////////////////////////////////////////*/
+
+
+var dependencies = [
+  'ionic', 
+  'starter.controllers', 
+  'starter.services', 
+  'ionic-material'
+];
 
 angular.module('starter', dependencies)
-.run(function( $ionicPlatform, $ionicHistory, $window, $ionicLoading ) {
+.run(function( $ionicPlatform, $ionicHistory, $window, $ionicLoading, $location ) {
   $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
+    /*========================================================== 
+      Hide the accessory bar by default 
+      (remove this to show the accessory bar above the keyboard
+      for form inputs)
+    ------------------------------------------------------------*/
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
@@ -22,36 +85,55 @@ angular.module('starter', dependencies)
       StatusBar.styleDefault();
     }
 
-    // To Disable Back in Entire App
-    var backbutton = 0;
-    $ionicPlatform.registerBackButtonAction(function(){
-      if ( backbutton == 0 ) {
-        event.preventDefault();
-        $ionicLoading.show({
-          template: "<h4>Presione de nuevo para salir</h4>", 
-          animation: 'fade-in', showBackdrop: false, 
-          maxWidth: 500, showDelay: 0
-        });
-        $window.setTimeout(function () {
-          $ionicLoading.hide();
-          backbutton++;
-        },1500);
-      } 
-      else {
-        backbutton = 0;
-        navigator.app.exitApp();
-      }
 
+    /*=====================================
+        Verify session
+    ---------------------------------------*/
+    checkSession($window, $ionicLoading, $location)
+
+
+    /*==============================
+      To Disable Back in Entire App
+    --------------------------------*/
+    var backbutton = 0;
+    $ionicPlatform.registerBackButtonAction(function(event){
+      // Exit App
+      if ( backbutton != 0 ) {
+          backbutton = 0;
+          navigator.app.exitApp();          
+      }
+      // Alert back button pressed
+      else {
+          event.preventDefault();
+
+          $ionicLoading.show({
+            template: "<h4>Presione de nuevo para salir</h4>", 
+            animation: 'fade-in', showBackdrop: false, 
+            maxWidth: 500, showDelay: 0
+          });
+
+          $window.setTimeout(function () {
+            $ionicLoading.hide();
+            backbutton = backbutton + 1;
+          },1500);
+      }
     },100);
+
 
   });
 })
 
+
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-  // Titulo de las vistas en el centro
+  /*====================================
+    Titulo de las vistas en el centro
+  --------------------------------------*/
   $ionicConfigProvider.navBar.alignTitle('center');
 
-  // Turn off caching for demo simplicity's sake
+
+  /*============================================ 
+    Turn off caching for demo simplicity's sake
+  ----------------------------------------------*/
   $ionicConfigProvider.views.maxCache(0);
 
   /*
@@ -66,9 +148,9 @@ angular.module('starter', dependencies)
     controller: 'InitLoginCtrl'
   })
   
-  /*////////////////////
+  /*==================
       Login 
-  ////////////////////*/
+  --------------------*/
   .state('app.login', {
     url: '/login',
     views: {
@@ -81,14 +163,13 @@ angular.module('starter', dependencies)
   })
   
   
-  /*/////////////////////////////////////////////////
+  /*===============================================
           Estados y vistas para pacientes
-  /////////////////////////////////////////////////*/
+  -------------------------------------------------*/
 
-
-  /*////////////////////
+  /*==================
       Menú lateral
-  ////////////////////*/
+  --------------------*/
   .state('paciente', {
     url: '/paciente',
     abstract: true,
@@ -97,9 +178,9 @@ angular.module('starter', dependencies)
   })
 
    
-  /*//////////////////////
+  /*====================
       Página principal
-  //////////////////////*/
+  ----------------------*/
   .state('paciente.profile', {
     url: '/profile',
     views: {
@@ -112,9 +193,9 @@ angular.module('starter', dependencies)
   })
 
 
-  /*//////////////////////////////////
+  /*================================
       Formulario datos del perfil 
-  //////////////////////////////////*/
+  ----------------------------------*/
   .state('paciente.editProfile', {
     url: '/editarPerfil',
     views: {
@@ -130,9 +211,9 @@ angular.module('starter', dependencies)
   })
 
     
-  /*//////////////////////////////////
+  /*============================
       Centros médicos 
-  //////////////////////////////////*/
+  ------------------------------*/
   .state('paciente.centros', {
     url: '/centros',
     views: {
@@ -145,9 +226,9 @@ angular.module('starter', dependencies)
   })
   
   
-  /*//////////////////////////////////
+  /*==============================
       Datos de control 
-  //////////////////////////////////*/
+  --------------------------------*/
   .state('paciente.control', {
     url: '/control',
     views: {
@@ -160,9 +241,9 @@ angular.module('starter', dependencies)
   })
 
   
-  /*//////////////////////////////////
+  /*==============================
       Plan nutricional 
-  //////////////////////////////////*/
+  --------------------------------*/
   .state('paciente.plan', {
     url: '/plan',
     views: {
@@ -175,9 +256,9 @@ angular.module('starter', dependencies)
   })
 
   
-  /*//////////////////////////////////
+  /*==============================
       Citas 
-  //////////////////////////////////*/
+  --------------------------------*/
   .state('paciente.citas', {
     url: '/citas',
     views: {
@@ -190,9 +271,9 @@ angular.module('starter', dependencies)
   })
 
   
-  /*//////////////////////////////////
+  /*=============================
       Estadisticas 
-  //////////////////////////////////*/
+  -------------------------------*/
   .state('paciente.logros', {
     url: '/logros',
     views: {
@@ -207,6 +288,6 @@ angular.module('starter', dependencies)
 
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/login');
+  //$urlRouterProvider.otherwise('/app/login');
   
 });
