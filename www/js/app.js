@@ -68,7 +68,7 @@ var dependencies = [
 ];
 
 angular.module('starter', dependencies)
-.run(function( $ionicPlatform, $ionicHistory, $window, $ionicLoading, $location ) {
+.run(function( $ionicPlatform, $ionicHistory, $rootScope, $window, $ionicLoading, $location ) {
   $ionicPlatform.ready(function() {
     /*========================================================== 
       Hide the accessory bar by default 
@@ -84,7 +84,7 @@ angular.module('starter', dependencies)
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
+    
 
     /*=====================================
         Verify session
@@ -106,24 +106,24 @@ angular.module('starter', dependencies)
       else {
           event.preventDefault();
 
-          var myTemplate="<div class='text-center' style='height:15%; margin-top:70%; margin-bottom:15%;'>"+
-            "<i class='fa fa-exclamation-triangle' aria-hidden='true'></i>"+
-            "<br>"+
-            "<h4>Presione de nuevo para salir</h4>"+
-          "</div>"
-
+          var myTemplate = "<h4>Presione de nuevo para salir</h4>";
           $ionicLoading.show({
             template: myTemplate, 
             animation: 'fade-in', showBackdrop: false, 
             maxWidth: 500, showDelay: 0
           });
 
+          backbutton = backbutton + 1;
           $window.setTimeout(function () {
             $ionicLoading.hide();
-            backbutton = backbutton + 1;
           },700);
       }
     },100);
+
+    // Reset backButton counter
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        backbutton = 0;        
+    });
 
 
   });
