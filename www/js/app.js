@@ -18,8 +18,8 @@ function checkSession($window, $ionicLoading, $location) {
         ---------------------*/
         // Animation
         $ionicLoading.show({
-          template: '<ion-spinner icon="circles"></ion-spinner><br><h4>Cargando</h4>', 
-          animation: 'fade-in', showBackdrop: false, 
+          template: '<ion-spinner icon="circles"></ion-spinner><br><h4>Por favor, espere</h4>', 
+          animation: 'fade-in', showBackdrop: true, 
           maxWidth: 500, showDelay: 0
         });
         // Get user role from storage
@@ -106,8 +106,14 @@ angular.module('starter', dependencies)
       else {
           event.preventDefault();
 
+          var myTemplate="<div class='text-center' style='height:15%; margin-top:70%; margin-bottom:15%;'>"+
+            "<i class='fa fa-exclamation-triangle' aria-hidden='true'></i>"+
+            "<br>"+
+            "<h4>Presione de nuevo para salir</h4>"+
+          "</div>"
+
           $ionicLoading.show({
-            template: "<h4>Presione de nuevo para salir</h4>", 
+            template: myTemplate, 
             animation: 'fade-in', showBackdrop: false, 
             maxWidth: 500, showDelay: 0
           });
@@ -115,7 +121,7 @@ angular.module('starter', dependencies)
           $window.setTimeout(function () {
             $ionicLoading.hide();
             backbutton = backbutton + 1;
-          },1500);
+          },700);
       }
     },100);
 
