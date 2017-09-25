@@ -37,6 +37,7 @@ function checkSession($window, $ionicLoading, $location) {
             }
         }, 1500);
     }
+    
     else {
         /*=============== 
             Not logged
