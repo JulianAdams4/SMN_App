@@ -6,36 +6,17 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
 
 
 .constant('API', {
-//  url: 'http://apismn4movil.herokuapp.com/api'
-  url: 'http://www.angiedelpezo.com/api'
+    url: 'http://www.angiedelpezo.com/api'
 //  url: 'http://localhost:3000/api'
 })
 
 
-/*
-.config(function($cordovaInAppBrowserProvider) {
-  var defaultOptions = {
-    location: 'no',
-    clearcache: 'no',
-    toolbar: 'no'
-  };
-  document.addEventListener("deviceready", function () {
-    $cordovaInAppBrowserProvider.setDefaultOptions(options)
-  }, false);
-})
-*/
 
 
 .controller('AppCtrl', function(
-    $scope, $ionicModal, $ionicPopover, $timeout, $window, $ionicHistory, $state, $ionicLoading, 
-    LoginService, $rootScope, $ionicNavBarDelegate ) {
+    $scope, $ionicModal, $ionicPopover, $timeout, $window, $ionicHistory, $state, 
+    $ionicLoading, LoginService, $rootScope, $ionicNavBarDelegate ) {
 
-    /*
-    // Color de la Status bar
-    $scope.$on('$ionicView.beforeEnter', function() {
-        $rootScope.viewColor = '#f2aa00';
-    });
-    */
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
     $scope.hasHeaderFabRight = false;
@@ -120,17 +101,13 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
     //////////////////////////////////////////*/
     $scope.cerrarSesion = function () {
         $ionicLoading.show({
-            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cerrando sesión</h4>',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 500,
-            showDelay: 0
+            template: '<ion-spinner icon="circles"></ion-spinner><br><h4>Cerrando sesión</h4>',
+            animation: 'fade-in', showBackdrop: true, maxWidth: 500, showDelay: 0
         });
         $ionicHistory.clearCache();
         $ionicHistory.clearHistory();
         $ionicHistory.nextViewOptions({
-            disableAnimate: false,
-            disableBack: true
+            disableAnimate: false, disableBack: true
         });
         // Send time to hide animation
         LoginService.logOut(500);
@@ -141,8 +118,7 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
 
 
 
-.controller('InitLoginCtrl', function(
-    $scope, $window, $state, LoginService, ConnectivityMonitor, $ionicLoading ) {
+.controller('InitLoginCtrl', function( $scope ) {
 
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
@@ -161,34 +137,16 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
 
 
 .controller('LoginCtrl', function(
-    $scope, $timeout,  $ionicLoading, $ionicHistory,  
-    $state, $window, NotifyService, LoginService, ConnectivityMonitor ) {
+    $scope, $timeout, $ionicLoading, $ionicHistory, $state, $window, 
+    NotifyService, LoginService, StorageService ) {
 
+    // Initialize fields
     $scope.typeInput = 'password';
-    
-    $scope.init = function () {
-        ConnectivityMonitor.startWatching();
+    $scope.loginData = {};
+    $scope.loginData.loginUser="";
+    $scope.loginData.loginPassword="";
 
-        if ( LoginService.isSessionActive() ) {
-            // Animation
-            $ionicLoading.show({
-              template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
-              animation: 'fade-in',
-              showBackdrop: false,
-              maxWidth: 500,
-              showDelay: 0
-            });
-            var str = LoginService.getToken("rol");
-            $ionicLoading.hide();
-            $state.go(str+'.profile',{});
-        }
-        else {
-            $scope.loginData = {};
-            $scope.loginData.loginUser="";
-            $scope.loginData.loginPassword="";
-        }
-    }
-
+    // Visibility of password field
     $scope.changeType = function () {
         if ( $scope.typeInput == 'password' ) {
             $scope.typeInput = 'text';
@@ -203,40 +161,33 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
         if( $scope.loginData.loginUser=="" || $scope.loginData.loginPassword=="" ){
             NotifyService.notify('<h4>¡Ingrese credenciales válidas!</h4>', 3000);
         }
+
         else {
             // Animation
             $ionicLoading.show({
-                template: '<ion-spinner icon="circles"></ion-spinner> <h4>Por favor, espere</h4>',
-                animation: 'fade-in',
-                showBackdrop: true,
-                maxWidth: 500,
-                showDelay: 0
+                template: '<ion-spinner icon="circles"></ion-spinner><br><h4>Por favor, espere</h4>',
+                animation: 'fade-in', showBackdrop: true, maxWidth: 500, showDelay: 0
             });
-            /*/////////////////////////////////////// 
-                Validacion de credenciales y roles
-            ///////////////////////////////////////*/
+
+            // Validacion de credenciales y roles
             var user = $scope.loginData.loginUser;
             var pass = $scope.loginData.loginPassword;
 
             LoginService.loginUser( user, pass )
             .success(function (data) {
-                //console.log(data);
-                var ls = {
-                    sessionActive: true,
-                    rol: 'paciente'
-                };
-                LoginService.setToken(ls); // Se crea la "session"
+                // Se crea la "session"
+                var ls = { sessionActive: true, rol: 'paciente' };
+                StorageService.saveElementsJson(ls);
                 // No back button
                 $ionicHistory.nextViewOptions({
-                  disableAnimate: true,
-                  disableBack: true
+                  disableAnimate: true, disableBack: true
                 });
+                // Hide animation
                 $ionicLoading.hide();
                 $state.go('paciente.profile',{}, {reload: true});
-
             })
             .error(function (data) {
-                //console.log(data);
+                // Hide animation
                 $ionicLoading.hide();
                 NotifyService.notify('<h4>¡Usuario o contraseña incorrectos!<br>Por favor verifique las credenciales</h4>',3000);
             });
@@ -244,25 +195,14 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
 
     } // end login
 
-    $scope.cerrarSesion = function () {
-        $ionicLoading.show({
-            template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cerrando sesión</h4>',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 500,
-            showDelay: 0
-        });
-        // Send true for hide animation
-        LoginService.logOut(500);
-    }
-
 })
 
 
 
 
 .controller('CentrosCtrl', function(
-    $scope, $stateParams, $timeout, $ionicNavBarDelegate, CentroService, NotifyService, $ionicLoading ) {
+    $scope, $stateParams, $timeout, $ionicNavBarDelegate, $ionicLoading, 
+    StorageService, CentroService, NotifyService, ) {
 
     // Set Header
     $scope.$parent.showHeader();
@@ -280,15 +220,23 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
       // Animation
       $ionicLoading.show({
         template: '<ion-spinner icon="circles"></ion-spinner> <h4>Cargando</h4>',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 500,
-        showDelay: 0
+        animation: 'fade-in', showBackdrop: true, maxWidth: 500, showDelay: 0
       });
 
       CentroService.allCentros()
-      .success(function (data) {
-        var dataCentro = data[0];
+      .success(function (myData) {
+        var data = myData[0];
+        // Save on localStorage only if modified
+        if ( StorageService.exists('dataCentros') ) {
+          if ( StorageService.isModifiedJson('dataCentros', data) ) {
+            StorageService.saveJson('dataCentros', data);
+          }
+        }
+        else { // Save if doesn't exist
+          StorageService.saveJson('dataCentros', data);
+        }
+        // Manipulatiing data
+        var dataCentro = data;
         if ( dataCentro.redesSociales ) {
           for ( var i=0 ; i<dataCentro.redesSociales.length; i++ ){
             var truncated = dataCentro.redesSociales[i].link.split(".com/")[1];
@@ -299,8 +247,23 @@ angular.module('starter.controllers', ['ngCordova', 'chart.js', 'ui.calendar'])
         $ionicLoading.hide();
       })
       .error(function (data) {
-        $ionicLoading.hide();
-        NotifyService.notify('<h4>Ha ocurrido un error y no se pudo<br>obtener la informacion del centro</h4>',3000);
+        // Get cached data on error
+        if( StorageService.exists('dataCentros') ){
+            var dataCentro = StorageService.getJson('dataCentros');
+            if ( dataCentro.redesSociales ) {
+              for ( var i=0 ; i<dataCentro.redesSociales.length; i++ ){
+                var truncated = dataCentro.redesSociales[i].link.split(".com/")[1];
+                dataCentro.redesSociales[i].link = truncated;
+              }
+            }
+            $scope.centro = dataCentro;
+            $ionicLoading.hide();
+        }
+        // If doesn't exist cached data -> Error
+        else {
+            $ionicLoading.hide();
+            NotifyService.notify('<h4>Ha ocurrido un error y no se pudo<br>obtener la informacion del centro</h4>',3000);
+        }
       });
     }
 

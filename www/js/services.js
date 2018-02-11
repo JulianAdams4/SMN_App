@@ -1,5 +1,8 @@
 angular.module('starter.services', [])
 
+
+
+
 /*/////////////////////////////////////////
     Servicio que muestra notificaciones
 //////////////////////////////////////// */
@@ -19,86 +22,221 @@ angular.module('starter.services', [])
 })
 
 
-/*///////////////////////////////////
-    Servicio que consume el API 
-    y que controla el login
-////////////////////////////////// */
-.service('LoginService', function( $ionicHistory, $ionicLoading, $rootScope, 
-                                   $http, $window, API ){
+
+
+/*///////////////////////////////////////////
+    Servicio que maneja el almacenamiento
+///////////////////////////////////////////*/
+.service('StorageService', function ( $rootScope, $window ){
+
+    function compareObjects(o, p) {
+        var i,
+            keysO = Object.keys(o).sort(),
+            keysP = Object.keys(p).sort();
+        if (keysO.length !== keysP.length)
+            return false;//not the same nr of keys
+        if (keysO.join('') !== keysP.join(''))
+            return false;//different keys
+        for (i=0;i<keysO.length;++i)
+        {
+            if (o[keysO[i]] instanceof Array)
+            {
+                if (!(p[keysO[i]] instanceof Array))
+                    return false;
+                //if (compareObjects(o[keysO[i]], p[keysO[i]] === false) return false
+                //would work, too, and perhaps is a better fit, still, this is easy, too
+                if (p[keysO[i]].sort().join('') !== o[keysO[i]].sort().join(''))
+                    return false;
+            }
+            else if (o[keysO[i]] instanceof Date)
+            {
+                if (!(p[keysO[i]] instanceof Date))
+                    return false;
+                if ((''+o[keysO[i]]) !== (''+p[keysO[i]]))
+                    return false;
+            }
+            else if (o[keysO[i]] instanceof Function)
+            {
+                if (!(p[keysO[i]] instanceof Function))
+                    return false;
+                //ignore functions, or check them regardless?
+            }
+            else if (o[keysO[i]] instanceof Object)
+            {
+                if (!(p[keysO[i]] instanceof Object))
+                    return false;
+                if (o[keysO[i]] === o)
+                {//self reference?
+                    if (p[keysO[i]] !== p)
+                        return false;
+                }
+                else if (compareObjects(o[keysO[i]], p[keysO[i]]) === false)
+                    return false;//WARNING: does not deal with circular refs other than ^^
+            }
+            if (o[keysO[i]] !== p[keysO[i]])//change !== to != for loose comparison
+                return false;//not the same value
+        }
+        return true;
+    }
+    /* --------------------------------------------------------*/
+    function existe( name ) {
+        return $window.localStorage[name] ? true : false;
+    }
+    /* --------------------------------------------------------*/
+    function fueModificado( name, value ) {
+        var _it      = $window.localStorage.getItem(String(name));
+        var _exist   = $window.localStorage[name]
+        var _notNull = (_it != null && _it != "" ) ? true : false ;
+        if ( _exist && _notNull ) {
+            return (_it === value ) ? false : true ; 
+        }
+        else {
+            return true
+        }        
+    }
+    /* --------------------------------------------------------*/
+    function fueModificadoJson( nameJson, valueJson ) {
+        var _it      = $window.localStorage.getItem(String(nameJson));
+        var _exist   = $window.localStorage[name]
+        var _notNull = (_it != null && _it != "" ) ? true : false ;
+        if ( _exist && _notNull ) {
+            var json_it = JSON.parse(_it);
+            // Equal -> Not modified = false
+            return compareObjects( json_it, valueJson )? false : true ;
+        }
+        else {
+            return true
+        }
+    }
+    /* --------------------------------------------------------*/
+    function obtener( name ) {
+        return $window.localStorage.getItem(String(name));
+    }
+    /* --------------------------------------------------------*/
+    function guardar( key, value ) {
+        $window.localStorage.setItem(key, value);
+    }
+    /* --------------------------------------------------------*/
+    function obtenerJson( nameJson ) {
+        var stringJson = $window.localStorage.getItem(String(nameJson));
+        return JSON.parse(stringJson);
+    }
+    /*---------------------------------------------------------*/
+    function guardarJson( nameJson, jsonObject ) {
+        $window.localStorage.setItem(nameJson, JSON.stringify(jsonObject));
+    }
+    /*---------------------------------------------------------*/
+    /*---------------------------------------------------------*/
+    /*---------------------------------------------------------*/
+    /*---------------------------------------------------------*/
 
     return {
-        setToken:  function (tokens) {
+        exists: function (name){ 
+            return existe(name); 
+        },
+        isModified: function (name,value){ 
+            return fueModificado(name,value); 
+        },
+        isModifiedJson: function (nameJson, valueJson){
+            return fueModificadoJson(nameJson, valueJson);
+        },
+        getElement: function (name){
+            return obtener(name);
+        },
+        saveElement: function (key, value){
+            guardar(key, value);
+        },
+        saveElementsJson:  function (tokens) {
           for (var key in tokens){
             $window.localStorage.setItem(key , encodeURIComponent(tokens[key]) );
           }
         },
-
-
-        getToken: function (value) {
-          return $window.localStorage.getItem(String(value));    
+        getJson: function (nameJson){
+            return obtenerJson(nameJson);
         },
-
-
-        isSessionActive: function () {
-          var a = $window.localStorage.rol;
-          var b = $window.localStorage.rol!=""; 
-          return (a && b) ? true : false;
-        },
-
-
-        loginUser: function( user, clave) {
-            var myobject = { cedula: user, password: clave };
-            // Cast function
-            Object.toparams = function ObjecttoParams(obj) {
-                var p = [];
-                    for (var key in obj){
-                        p.push(key + '=' + encodeURIComponent(obj[key]));
-                    }
-                return p.join('&');
-            };
-            // Data for requeriment
-            var req = {
-                method: 'POST',
-                url: API.url + '/pacienteLogin',
-                data: Object.toparams(myobject),
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Cache-Control': 'private'
-                }
-            }
-            // Return promise
-            return $http(req)
-            .success(function(data, status, headers, config){})
-            .error(function(data, status, headers, config){});
-        }, 
-
-        logOut: function (hide) {
-            $window.localStorage.clear();
-            $window.sessionStorage.clear();
-            $ionicHistory.clearCache();
-            $ionicHistory.clearHistory();
-            // No back
-            $ionicHistory.nextViewOptions({
-                disableAnimate: false,
-                disableBack: true
-            });
-            // Hide animation
-            if (hide && hide>0) { 
-                $window.setTimeout(function () {
-                    $ionicLoading.hide();  // Off animation
-                    $window.location.href = '#/app/login';  // To login
-                }, hide);
-            }
-            else {
-                $window.location.href = '#/app/login';  // To login
-            }
+        saveJson: function (nameJson, jsonObject){
+            guardarJson(nameJson, jsonObject);
         }
-        
     }
+
 })
 
 
-.service('PacienteService', function ( $rootScope, $window, API, $http ){
+
+
+/*//////////////////////////////////////
+    Servicio que controla el login
+///////////////////////////////////// */
+.service('LoginService', function( $ionicHistory, $ionicLoading, $http, $window, API ){
+
+    function consumirLogin( user, clave ) {
+        var myobject = { cedula: user, password: clave };
+        // Cast function
+        Object.toparams = function ObjecttoParams(obj) {
+          var p = [];
+          for (var key in obj){
+            p.push(key + '=' + encodeURIComponent(obj[key]));
+          }
+          return p.join('&');
+        };
+        // Data for requeriment
+        var req = {
+          method: 'POST',
+          url: API.url + '/pacienteLogin',
+          data: Object.toparams(myobject),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Cache-Control': 'private'
+          }
+        }
+        // Return promise
+        return $http(req)
+        .success(function(data, status, headers, config){})
+        .error(function(data, status, headers, config){});
+    }
+    /* ------------------------------------------------------- */
+    function consumirLogout(hide) {
+        $window.localStorage.clear();
+        $window.sessionStorage.clear();
+        $ionicHistory.clearCache();
+        $ionicHistory.clearHistory();
+        // No back
+        $ionicHistory.nextViewOptions({
+          disableAnimate: false,
+          disableBack: true
+        });
+        // Hide animation
+        if (hide && hide>0) { 
+          $window.setTimeout(function () {
+            $ionicLoading.hide();  // Off animation
+            $window.location.href = '#/app/login';  // To login
+          }, hide);
+        }
+        else {
+          $window.location.href = '#/app/login';  // To login
+        }
+    }
+    /* ------------------------------------------------------- */
+    /* ------------------------------------------------------- */
+    return {
+        loginUser: function( user, clave ){
+            return consumirLogin(user,clave);
+        }, 
+        logOut: function ( hide ){
+            consumirLogout(hide);
+        }
+    }
+
+})
+
+
+
+
+/*/////////////////////////////////////////////////
+    Servicio que controla los datos de paciente
+//////////////////////////////////////////////// */
+.service('PacienteService', function ( $window, API, $http ){
+    /* ------------------------------------------------------- */
     // Cast function
     Object.toparams = function ObjecttoParams(obj) {
         var p = [];
@@ -107,124 +245,118 @@ angular.module('starter.services', [])
         }
         return p.join('&');
     };
-
+    /* ------------------------------------------------------- */
+    function obtenerDatosPaciente() {
+        var myobject = {};
+        // Data for requeriment
+        var req = {
+            method: 'GET',
+            url: API.url + '/pacientes/perfil',
+            data: Object.toparams(myobject),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Cache-Control': 'private'
+            }
+        }
+        // Return promise
+        return $http(req)
+        .success(function(data, status, headers, config){})
+        .error(function(data, status, headers, config){});        
+    }
+    /* ------------------------------------------------------- */
+    function actualizarPaciente(datosPaciente) {
+        var info = { paciente: datosPaciente }
+        // Data for requeriment
+        var req = {
+            method: 'PUT',
+            url: API.url + '/pacientes/perfil',
+            data: info,
+            headers: {
+                'Cache-Control': 'private'
+            }
+        }
+        return $http(req)
+        .success(function(data, status, headers, config){})
+        .error(function(data, status, headers, config){});
+    }
+    /* ------------------------------------------------------- */
+    /* ------------------------------------------------------- */
+    
     return {
         getDatos: function () {
-            var myobject = {};
-            // Data for requeriment
-            var req = {
-                method: 'GET',
-                url: API.url + '/pacientes/perfil',
-                data: Object.toparams(myobject),
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Cache-Control': 'private'
-                }
-            }
-            // Return promise
-            return $http(req)
-            .success(function(data, status, headers, config){})
-            .error(function(data, status, headers, config){});
+            return obtenerDatosPaciente();
         },
-
         editarPaciente: function (datosPaciente) {
-            var info = { paciente: datosPaciente }
-            // Data for requeriment
-            var req = {
-                method: 'PUT',
-                url: API.url + '/pacientes/perfil',
-                data: info,
-                headers: {
-                    'Cache-Control': 'private'
-                }
-            }
-            // Return promise
-            return $http(req)
-            .success(function(data, status, headers, config){})
-            .error(function(data, status, headers, config){});
+            return actualizarPaciente(datosPaciente);
         }
     }
+
 })
 
-/*//////////////////////////////////////////
-    Servicio que consume el API 
-    para obtener informacion del centro
-///////////////////////////////////////// */
+
+
+
+/*/////////////////////////////////////////////////////
+    Servicio que controla la informacion del centro
+//////////////////////////////////////////////////// */
 .service('CentroService', function($q, $rootScope, $http, $window, API) {
+    /* ------------------------------------------------------- */
+    function obtenerInformacionCentros(){
+        var myobject = {};
+        Object.toparams = function ObjecttoParams(obj) {
+            var p = [];
+                for (var key in obj){
+                    p.push(key + '=' + encodeURIComponent(obj[key]));
+                }
+            return p.join('&');
+        };
+        var req =  {
+            method: 'GET',
+            url: API.url + '/centro',
+            data: myobject,
+            headers: {'Cache-Control': 'public, last-modified'}
+        }
+        return $http(req)
+        .success(function(data, status, headers, config){})
+        .error(function(data, status, headers, config){});
+    }
+    /* ------------------------------------------------------- */
+    function obtenerCentroPorId( idCentro ) {
+        var myobject = {};
+        var req =  {
+            method: 'GET',
+            url: API.url + '/centro/'+idCentro,
+            data: myobject,
+            headers: {'Cache-Control': 'public, last-modified'}
+        }
+        return $http(req)
+        .success(function(data, status, headers, config){})
+        .error(function(data, status, headers, config){});
+    }
+    /* ------------------------------------------------------- */
+    /* ------------------------------------------------------- */
     return {
         allCentros: function() {
-            var myobject = {};
-            Object.toparams = function ObjecttoParams(obj) {
-                var p = [];
-                    for (var key in obj){
-                        p.push(key + '=' + encodeURIComponent(obj[key]));
-                    }
-                return p.join('&');
-            };
-            var req =  {
-                method: 'GET',
-                url: API.url + '/centro',
-                data: myobject,
-                headers: {'Cache-Control': 'public, last-modified'}
-            }
-            return $http(req)
-            .success(function(data, status, headers, config){})
-            .error(function(data, status, headers, config){});
-        }, // end allCentros
-
-        getById: function(idCentro) {
-            var myobject = {};
-            var req =  {
-                method: 'GET',
-                url: API.url + '/centro/'+idCentro,
-                data: myobject,
-                headers: {'Cache-Control': 'public, last-modified'}
-            }
-
-            return $http(req)
-            .success(function(data, status, headers, config){})
-            .error(function(data, status, headers, config){});
-        }  // end getById
-
-    }
-})
-
-
-/*//////////////////////////////////////////
-    Servicio que consume el API 
-    para obtener informacion de 
-    los examenes de un paciente
-///////////////////////////////////////// */
-.service('ExamenesPacienteService', function($q, $http, $window, API){
-    return {
-        allExamenes: function (idPaciente) {
-            return $http.get(API.url + '/muestrasByPaciente/'+String(idPaciente), {cache: false})
-            .success(function (data) {
-                // Success
-            })
-            .error(function (data) {
-                console.log("Error en ExamenesPacienteService");
-            })
+            return obtenerInformacionCentros();
         },
-
-        examenByIdMuestra: function (idM) {
-            return $http.get(API.url + '/muestras/'+String(idM), {cache: false})
-            .success(function (data) {
-                // Success
-            })
-            .error(function (data) {
-                console.log("Error en ExamenesPacienteService");
-            })
+        getById: function( idCentro ){
+            return obtenerCentroPorId(idCentro);
         }
     }
+
 })
+
+
 
 
 /*////////////////////////////////////////////////
-    Factory que controla el estado
-    de la conexion a internet persistentemente
+    Factory que controla el estado de 
+    la conexion a internet (persistentemente)
 ////////////////////////////////////////////// */
-.factory('ConnectivityMonitor', function( $rootScope, $cordovaNetwork, $ionicLoading, $window ){
+.factory('ConnectivityMonitor', function( $rootScope, $cordovaNetwork, $ionicLoading, 
+    $window,
+    $ionicModal ){
+
     return {
         // Verifica si posee conexion
         isOnline: function(){
@@ -248,6 +380,15 @@ angular.module('starter.services', [])
 
         // Monitorea la conexion a internet
         startWatching: function(){
+
+            // Load the modal from the given template URL
+            $ionicModal.fromTemplateUrl('templates/paciente/modalDesconexion.html', function($ionicModal) {
+              $rootScope.modal = $ionicModal;
+            }, {
+              scope: $rootScope,
+              animation: 'slide-in-up'
+            });
+
             if(ionic.Platform.isWebView()){
                 $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
                     $ionicLoading.show({
@@ -261,6 +402,7 @@ angular.module('starter.services', [])
                 });
      
                 $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+$rootScope.modal.show();
                     $ionicLoading.show({
                         template: "<h4>No estás conectado a internet</h4>", 
                         animation: 'fade-in', showBackdrop: false, 
@@ -283,6 +425,7 @@ angular.module('starter.services', [])
                     }, 3000);
                 }, false);    
                 window.addEventListener("offline", function(e) {
+$rootScope.modal.show();
                     $ionicLoading.show({
                         template: "<h4>No estás conectado a internet</h4>", 
                         animation: 'fade-in', showBackdrop: false, 

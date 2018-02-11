@@ -69,7 +69,9 @@ var dependencies = [
 ];
 
 angular.module('starter', dependencies)
-.run(function( $ionicPlatform, $ionicHistory, $rootScope, $window, $ionicLoading, $location ) {
+.run(function( $ionicPlatform, $ionicHistory, $rootScope, $window, $ionicLoading, $location,
+  ConnectivityMonitor ) {
+
   $ionicPlatform.ready(function() {
     /*========================================================== 
       Hide the accessory bar by default 
@@ -86,11 +88,16 @@ angular.module('starter', dependencies)
       StatusBar.styleDefault();
     }
     
+    /*=====================================
+        Watch Internet Connection
+    ---------------------------------------*/
+    ConnectivityMonitor.startWatching();
+
 
     /*=====================================
         Verify session
     ---------------------------------------*/
-    checkSession($window, $ionicLoading, $location)
+    checkSession($window, $ionicLoading, $location);
 
 
     /*==============================
